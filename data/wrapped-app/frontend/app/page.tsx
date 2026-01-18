@@ -140,14 +140,14 @@ export default function Home() {
           <div className="inline-block">
             <div className="sticker sticker-entry bg-wrapped-yellow text-black text-2xl px-8 py-3 mb-6">2024 EDITION</div>
           </div>
-          <h1 ref={titleRef} className="text-wrapped-poster text-8xl md:text-[13rem] leading-[0.75] tracking-tighter">
+          <h1 ref={titleRef} className="text-wrapped-poster leading-[0.75] tracking-tighter" style={{ fontSize: 'clamp(1.5rem, 7.5vw, 10rem)' }}>
             <div className="poster-line">YOUR</div>
             <div className="poster-line text-wrapped-outline">CHAT</div>
             <div className="poster-line text-wrapped-pink">WRAPPED</div>
           </h1>
 
           <div className="poster-line max-w-2xl mx-auto pt-6">
-            <p className="text-3xl md:text-5xl font-black italic tracking-tight text-white/90 leading-tight">
+            <p className="text-xl sm:text-2xl md:text-5xl font-black italic tracking-tight text-white/90 leading-tight">
               The words you said. <span className="text-wrapped-blue">The vibes you sent.</span>
             </p>
           </div>
@@ -157,19 +157,19 @@ export default function Home() {
         <div className="w-full max-w-3xl">
           <div ref={uploadRef} className="upload-container w-full">
             {!showUnwrap ? (
-              <div className="space-y-10">
-                <label className="wrapped-card block p-16 md:p-24 cursor-pointer relative overflow-hidden group bg-white">
+              <div className="space-y-6 md:space-y-10">
+                <label className="wrapped-card block p-6 sm:p-12 md:p-24 cursor-pointer relative overflow-hidden group bg-white">
                   <div className="absolute inset-0 bg-wrapped-blue/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <input type="file" multiple accept=".json" className="hidden" onChange={handleFileChange} />
                   <div className="flex flex-col items-center space-y-12 relative z-10">
                     <div className="p-12 bg-black text-white rounded-[2.5rem] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl">
                       <Upload className="w-20 h-20" />
                     </div>
-                    <div className="text-center space-y-4">
-                      <h3 className="text-6xl font-black italic uppercase tracking-tighter leading-none">
+                    <div className="text-center space-y-2 md:space-y-4">
+                      <h3 className="text-3xl sm:text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">
                         {files.length > 0 ? files.length + " FILES" : "DROP DATA"}
                       </h3>
-                      <p className="text-black/40 font-bold italic text-2xl uppercase tracking-widest">JSON ONLY</p>
+                      <p className="text-black/40 font-bold italic text-sm sm:text-lg md:text-2xl uppercase tracking-widest">JSON ONLY</p>
                     </div>
                   </div>
                 </label>
@@ -194,16 +194,16 @@ export default function Home() {
                       onClick={handleUpload}
                       disabled={isUploading}
                       className={cn(
-                        "w-full py-12 bg-wrapped-green text-black text-6xl font-black italic border-4 border-black shadow-[16px_16px_0px_black] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[20px_20px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[8px_8px_0px_black] transition-all flex items-center justify-center space-x-8",
+                        "w-full py-6 sm:py-8 md:py-12 bg-wrapped-green text-black text-3xl sm:text-4xl md:text-6xl font-black italic border-4 border-black shadow-[8px_8px_0px_black] md:shadow-[16px_16px_0px_black] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[20px_20px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[8px_8px_0px_black] transition-all flex items-center justify-center space-x-4 md:space-x-8",
                         isUploading && "opacity-50 cursor-not-allowed"
                       )}
                     >
                       {isUploading ? (
-                        <div className="w-16 h-16 border-8 border-black/20 border-t-black rounded-full animate-spin" />
+                        <div className="w-10 h-10 md:w-16 md:h-16 border-4 md:border-8 border-black/20 border-t-black rounded-full animate-spin" />
                       ) : (
                         <>
                           <span>GENERATE</span>
-                          <ArrowRight className="w-14 h-14" />
+                          <ArrowRight className="w-8 h-8 md:w-14 md:h-14" />
                         </>
                       )}
                     </button>
@@ -214,9 +214,9 @@ export default function Home() {
               <div className="unwrap-action space-y-12">
                 <button
                   onClick={() => setShowUnwrap(false)}
-                  className="w-full py-20 bg-wrapped-pink text-white text-7xl font-black italic border-4 border-black shadow-[20px_20px_0px_black] hover:scale-[1.05] transition-transform active:scale-95 flex flex-col items-center justify-center space-y-8"
+                  className="w-full py-12 md:py-20 bg-wrapped-pink text-white text-5xl md:text-7xl font-black italic border-4 border-black shadow-[16px_16px_0px_black] md:shadow-[20px_20px_0px_black] hover:scale-[1.05] transition-transform active:scale-95 flex flex-col items-center justify-center space-y-4 md:space-y-8"
                 >
-                  <Gift className="w-32 h-32" />
+                  <Gift className="w-24 h-24 md:w-32 md:h-32" />
                   <span>UNWRAP</span>
                 </button>
                 <div className="sticker bg-white text-black mx-auto block text-center text-3xl py-4 px-10">YOUR STORY IS READY</div>
@@ -226,11 +226,11 @@ export default function Home() {
         </div>
 
         {/* Floating Icons Flair */}
-        <div className="flex space-x-10 sticker-entry pt-8">
-          <div className="p-6 bg-wrapped-blue text-black rounded-3xl rotate-6 shadow-xl"><Music className="w-12 h-12" /></div>
-          <div className="p-6 bg-wrapped-purple text-white rounded-3xl -rotate-12 shadow-xl"><Heart className="w-12 h-12" /></div>
-          <div className="p-6 bg-wrapped-orange text-black rounded-3xl rotate-12 shadow-xl"><Zap className="w-12 h-12" /></div>
-          <div className="p-6 bg-wrapped-green text-black rounded-3xl -rotate-6 shadow-xl"><Sparkles className="w-12 h-12" /></div>
+        <div className="flex flex-wrap justify-center gap-4 md:space-x-10 sticker-entry pt-8">
+          <div className="p-4 md:p-6 bg-wrapped-blue text-black rounded-2xl md:rounded-3xl rotate-6 shadow-xl"><Music className="w-8 h-8 md:w-12 md:h-12" /></div>
+          <div className="p-4 md:p-6 bg-wrapped-purple text-white rounded-2xl md:rounded-3xl -rotate-12 shadow-xl"><Heart className="w-8 h-8 md:w-12 md:h-12" /></div>
+          <div className="p-4 md:p-6 bg-wrapped-orange text-black rounded-2xl md:rounded-3xl rotate-12 shadow-xl"><Zap className="w-8 h-8 md:w-12 md:h-12" /></div>
+          <div className="p-4 md:p-6 bg-wrapped-green text-black rounded-2xl md:rounded-3xl -rotate-6 shadow-xl"><Sparkles className="w-8 h-8 md:w-12 md:h-12" /></div>
         </div>
       </div>
 

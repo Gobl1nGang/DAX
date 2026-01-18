@@ -252,9 +252,11 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
                     key={currentSlide}
                     data-slide={currentSlide}
                     data-slide-id={slides[currentSlide].id}
-                    className="absolute inset-0 flex items-center justify-center p-6 md:p-12"
+                    className="absolute inset-0 flex items-center justify-center p-4 md:p-12 overflow-y-auto"
                 >
-                    {slides[currentSlide].component}
+                    <div className="w-full max-w-full flex items-center justify-center min-h-full py-20 md:py-0">
+                        {slides[currentSlide].component}
+                    </div>
                 </div>
             </div>
 
@@ -314,7 +316,7 @@ function IntroSlide() {
             <div className="wrapped-card p-12 rotate-3 inline-block">
                 <Sparkles className="w-32 h-32 text-wrapped-pink" />
             </div>
-            <h2 className="text-wrapped-poster text-8xl md:text-[12rem] text-black leading-none">
+            <h2 className="text-wrapped-poster text-6xl md:text-[12rem] text-black leading-none">
                 READY<br />FOR<br />THIS?
             </h2>
         </div>
@@ -336,8 +338,8 @@ function TopWordsSlide({ data }: { data: any[] }) {
             <h2 className="text-wrapped-poster text-7xl md:text-9xl text-black">TOP WORDS</h2>
             <div className="space-y-4">
                 {data.slice(0, 5).map(([word, count], i) => (
-                    <div key={word} className="word-row opacity-0 flex items-end space-x-4">
-                        <span className="text-wrapped-poster text-6xl md:text-8xl text-black/20">{i + 1}</span>
+                    <div key={word} className="word-row opacity-0 flex items-center md:items-end space-x-4">
+                        <span className="text-wrapped-poster text-4xl md:text-8xl text-black/20">{i + 1}</span>
                         <div className="wrapped-card flex-1 p-4 md:p-6 flex justify-between items-center">
                             <span className="text-3xl md:text-5xl font-black italic uppercase">{word}</span>
                             <span className="text-xl md:text-2xl font-mono font-black">{count}</span>
@@ -360,9 +362,9 @@ function AuraSlide({ data }: { data: any[] }) {
                 <div className="sticker bg-black text-white absolute -top-4 -right-4">ELITE VIBES</div>
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40">MOST AURA</h2>
-                <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{topAura[0]}</h3>
-                <div className="sticker bg-white text-black text-2xl">MOST LIKE REACTIONS PER MESSAGE</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40">MOST AURA</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{topAura[0]}</h3>
+                <div className="sticker bg-white text-black text-lg md:text-2xl">MOST LIKE REACTIONS PER MESSAGE</div>
             </div>
         </div>
     );
@@ -379,8 +381,8 @@ function TimeSlide({ night, morning }: { night: any[], morning: any[] }) {
                     <h3 className="text-3xl font-black italic">NIGHT OWL</h3>
                 </div>
                 <div className="space-y-2">
-                    <p className="text-wrapped-poster text-6xl md:text-8xl">{topNight[0]}</p>
-                    <p className="text-xl font-bold opacity-60 uppercase tracking-tighter">{topNight[1]} LATE NIGHTS</p>
+                    <p className="text-wrapped-poster text-5xl md:text-8xl">{topNight[0]}</p>
+                    <p className="text-lg md:text-xl font-bold opacity-60 uppercase tracking-tighter">{topNight[1]} LATE NIGHTS</p>
                 </div>
             </div>
 
@@ -390,8 +392,8 @@ function TimeSlide({ night, morning }: { night: any[], morning: any[] }) {
                     <h3 className="text-3xl font-black italic">EARLY BIRD</h3>
                 </div>
                 <div className="space-y-2">
-                    <p className="text-wrapped-poster text-6xl md:text-8xl">{topMorning[0]}</p>
-                    <p className="text-xl font-bold opacity-60 uppercase tracking-tighter">{topMorning[1]} MORNINGS</p>
+                    <p className="text-wrapped-poster text-5xl md:text-8xl">{topMorning[0]}</p>
+                    <p className="text-lg md:text-xl font-bold opacity-60 uppercase tracking-tighter">{topMorning[1]} MORNINGS</p>
                 </div>
             </div>
         </div>
@@ -406,9 +408,9 @@ function ProfanitySlide({ data }: { data: any[] }) {
                 <div className="text-6xl font-black text-red-400">!#%&</div>
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40">POTTY MOUTH</h2>
-                <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{top[0]}</h3>
-                <div className="sticker bg-black text-white text-2xl">{top[1]} SWEARS SENT</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40">POTTY MOUTH</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{top[0]}</h3>
+                <div className="sticker bg-black text-white text-lg md:text-2xl">{top[1]} SWEARS SENT</div>
             </div>
         </div>
     );
@@ -422,9 +424,9 @@ function ReelsSlide({ data }: { data: any[] }) {
                 <Music className="w-24 h-24 text-wrapped-blue" />
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">REEL ADDICT</h2>
-                <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{top[0]}</h3>
-                <div className="sticker bg-wrapped-blue text-white text-2xl">{top[1]} REELS SHARED</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40 uppercase">REEL ADDICT</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{top[0]}</h3>
+                <div className="sticker bg-wrapped-blue text-white text-lg md:text-2xl">{top[1]} REELS SHARED</div>
             </div>
         </div>
     );
@@ -438,9 +440,9 @@ function LongestWordSlide({ data }: { data: any[] }) {
                 <Trophy className="w-24 h-24 text-wrapped-yellow" />
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">VOCABULARY KING</h2>
-                <h3 className="text-wrapped-poster text-6xl md:text-8xl text-black">{top.user}</h3>
-                <div className="sticker bg-black text-white text-2xl">"{top.word}" ({top.length} LETTERS)</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40 uppercase">VOCABULARY KING</h2>
+                <h3 className="text-wrapped-poster text-5xl md:text-8xl text-black">{top.user}</h3>
+                <div className="sticker bg-black text-white text-lg md:text-2xl">"{top.word}" ({top.length} LETTERS)</div>
             </div>
         </div>
     );
@@ -454,9 +456,9 @@ function LikesGivenSlide({ data }: { data: any[] }) {
                 <div className="text-6xl" style={{ textShadow: '2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black' }}>😊</div>
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">CHIEF ENCOURAGER</h2>
-                <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{top[0]}</h3>
-                <div className="sticker bg-white text-black text-2xl">{top[1]} LIKES GIVEN</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40 uppercase">CHIEF ENCOURAGER</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{top[0]}</h3>
+                <div className="sticker bg-white text-black text-lg md:text-2xl">{top[1]} LIKES GIVEN</div>
             </div>
         </div>
     );
@@ -470,9 +472,9 @@ function RepliedToSlide({ data }: { data: any[] }) {
                 <MessageSquare className="w-24 h-24 text-black" />
             </div>
             <div className="space-y-4">
-                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">MOST POPULAR</h2>
-                <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{top[0]}</h3>
-                <div className="sticker bg-black text-white text-2xl">THEY GET ALL THE REPLIES</div>
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40 uppercase">MOST POPULAR</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{top[0]}</h3>
+                <div className="sticker bg-black text-white text-lg md:text-2xl">THEY GET ALL THE REPLIES</div>
             </div>
         </div>
     );
@@ -484,9 +486,9 @@ function EmojiSlide({ data }: { data: any[] }) {
             <h2 className="text-wrapped-poster text-7xl md:text-9xl text-black">VIBE CHECK</h2>
             <div className="flex flex-wrap justify-center gap-8">
                 {data.slice(0, 5).map(([emoji, count], i) => (
-                    <div key={i} className="wrapped-card p-6 flex flex-col items-center space-y-4 animate-bounce" style={{ animationDelay: `${i * 100}ms` }}>
-                        <span className="text-7xl">{emoji}</span>
-                        <span className="text-2xl font-black">{count}</span>
+                    <div key={i} className="wrapped-card p-4 md:p-6 flex flex-col items-center space-y-2 md:space-y-4 animate-bounce" style={{ animationDelay: `${i * 100}ms` }}>
+                        <span className="text-5xl md:text-7xl">{emoji}</span>
+                        <span className="text-xl md:text-2xl font-black">{count}</span>
                     </div>
                 ))}
             </div>
@@ -500,9 +502,9 @@ function TopLikedSlide({ data }: { data: any[] }) {
     return (
         <div className="w-full max-w-4xl space-y-12 text-center">
             <h2 className="text-wrapped-poster text-6xl md:text-8xl text-black">HALL OF FAME</h2>
-            <div className="wrapped-card p-12 space-y-8 relative">
-                <Award className="absolute -top-8 -left-8 w-20 h-20 text-wrapped-yellow rotate-[-15deg]" />
-                <p className="text-4xl md:text-6xl font-black italic">"{top.content}"</p>
+            <div className="wrapped-card p-6 md:p-12 space-y-6 md:space-y-8 relative">
+                <Award className="absolute -top-6 -left-6 md:-top-8 md:-left-8 w-12 h-12 md:w-20 md:h-20 text-wrapped-yellow rotate-[-15deg]" />
+                <p className="text-2xl md:text-6xl font-black italic">"{top.content}"</p>
                 <div className="flex justify-between items-center pt-8 border-t-4 border-black">
                     <div className="text-left">
                         <p className="text-sm font-black opacity-40 uppercase">Sent by</p>
@@ -570,8 +572,8 @@ function SummarySlide({
     const [showShareDialog, setShowShareDialog] = useState(false);
 
     return (
-        <div className="text-center space-y-12 w-full max-w-5xl">
-            <h2 className="text-wrapped-poster text-7xl md:text-[10rem] text-white">THAT'S<br />YOUR<br />YEAR.</h2>
+        <div className="text-center space-y-12 w-full max-w-5xl px-4">
+            <h2 className="text-wrapped-poster text-5xl md:text-[10rem] text-white">THAT'S<br />YOUR<br />YEAR.</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="wrapped-card p-8 text-left -rotate-1">
