@@ -15,7 +15,143 @@ import NetworkGraph from "./NetworkGraph";
 export default function WrappedExperience({ data, onReset }: WrappedExperienceProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [showShareDialog, setShowShareDialog] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [progressMessage, setProgressMessage] = useState('');
     const slideRef = useRef<HTMLDivElement>(null);
+
+    const generatePDF = async () => {
+        if (isGenerating) return;
+        setIsGenerating(true);
+        setProgressMessage('Preparing to capture slides...');
+
+        try {
+            const jsPDF = (await import('jspdf')).default;
+            const { toPng } = await import('html-to-image');
+
+            const originalSlide = currentSlide;
+            let pdf: any = null;
+
+            for (let i = 0; i < slides.length - 1; i++) {
+                setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
+                setCurrentSlide(i);
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
+                if (!slideContainer) continue;
+
+                const imgData = await toPng(slideContainer, {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    cacheBust: true,
+                    backgroundColor: slides[i].bg.includes('bg-wrapped') ? undefined : '#000000',
+                    filter: (node) => {
+                        const exclusionIds = ['generation-overlay', 'nav-arrows', 'top-progress-bar', 'tap-hint'];
+                        return !(node instanceof HTMLElement && exclusionIds.includes(node.id));
+                    }
+                });
+
+                const img = new Image();
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = imgData;
+                    setTimeout(() => reject(new Error("Timeout")), 5000);
+                });
+
+                const imgWidth = img.width;
+                const imgHeight = img.height;
+
+                if (!pdf) {
+                    const orientation = imgWidth > imgHeight ? 'l' : 'p';
+                    pdf = new jsPDF(orientation, 'px', [imgWidth, imgHeight]);
+                } else {
+                    pdf.addPage([imgWidth, imgHeight], imgWidth > imgHeight ? 'l' : 'p');
+                }
+
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            }
+
+            setProgressMessage('Saving PDF...');
+            setCurrentSlide(originalSlide);
+            pdf.save('my-year-wrapped.pdf');
+            setProgressMessage('Download complete!');
+
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            setProgressMessage('Error occurred. Please try again.');
+        } finally {
+            setTimeout(() => {
+                setIsGenerating(false);
+                setProgressMessage('');
+            }, 2000);
+        }
+    };
+
+    const generateImages = async () => {
+        if (isGenerating) return;
+        setIsGenerating(true);
+        setProgressMessage('Preparing to capture slides...');
+
+        try {
+            const JSZip = (await import('jszip')).default;
+            const { toBlob } = await import('html-to-image');
+
+            const zip = new JSZip();
+            const originalSlide = currentSlide;
+
+            for (let i = 0; i < slides.length - 1; i++) {
+                setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
+                setCurrentSlide(i);
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
+                if (!slideContainer) continue;
+
+                try {
+                    const blob = await toBlob(slideContainer, {
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                        cacheBust: true,
+                        filter: (node) => {
+                            const exclusionIds = ['generation-overlay', 'nav-arrows', 'top-progress-bar', 'tap-hint'];
+                            return !(node instanceof HTMLElement && exclusionIds.includes(node.id));
+                        }
+                    });
+
+                    if (blob) {
+                        const slideId = slides[i].id;
+                        zip.file(`${String(i + 1).padStart(2, '0')}-${slideId}.png`, blob);
+                    }
+                } catch (error) {
+                    console.warn(`Failed to capture slide ${i}:`, error);
+                }
+            }
+
+            setProgressMessage('Creating ZIP file...');
+            setCurrentSlide(originalSlide);
+
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(zipBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-year-wrapped-images.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            setProgressMessage('Download complete!');
+
+        } catch (error) {
+            console.error('Error generating images:', error);
+            setProgressMessage('Error occurred. Please try again.');
+        } finally {
+            setTimeout(() => {
+                setIsGenerating(false);
+                setProgressMessage('');
+            }, 2000);
+        }
+    };
 
     const slides = [
         { id: "intro", component: <IntroSlide />, bg: "bg-wrapped-pink" },
@@ -32,11 +168,23 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
         { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-green" },
         { id: "archetypes", component: <ArchetypesSlide rankings={data.rankings} />, bg: "bg-wrapped-purple" },
     ];
-    
+
     // Add summary slide after slides array is defined
     slides.push({
-        id: "summary", 
-        component: <SummarySlide data={data} onReset={onReset} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} slides={slides} />, 
+        id: "summary",
+        component: (
+            <SummarySlide
+                data={data}
+                onReset={onReset}
+                currentSlide={currentSlide}
+                setCurrentSlide={setCurrentSlide}
+                slides={slides}
+                generatePDF={generatePDF}
+                generateImages={generateImages}
+                isGenerating={isGenerating}
+                progressMessage={progressMessage}
+            />
+        ),
         bg: "bg-black"
     });
 
@@ -84,7 +232,7 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
     return (
         <div className={cn("fixed inset-0 overflow-hidden flex flex-col z-50 transition-colors duration-700", slides[currentSlide].bg)}>
             {/* Progress Bar */}
-            <div className="absolute top-8 left-8 right-8 flex space-x-2 z-50">
+            <div id="top-progress-bar" className="absolute top-8 left-8 right-8 flex space-x-2 z-50">
                 {slides.map((_, i) => (
                     <div key={i} className="h-2 flex-1 bg-black/10 rounded-full overflow-hidden">
                         <div
@@ -111,30 +259,51 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
             </div>
 
             {/* Global Navigation Arrows */}
-            <div className="absolute inset-y-0 left-0 w-20 flex items-center justify-center z-[60] pointer-events-none">
-                {currentSlide > 0 && (
-                    <button
-                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                        className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
-                    >
-                        <ChevronLeft className="w-8 h-8" />
-                    </button>
-                )}
-            </div>
-            <div className="absolute inset-y-0 right-0 w-20 flex items-center justify-center z-[60] pointer-events-none">
-                {currentSlide < slides.length - 1 && (
-                    <button
-                        onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                        className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
-                    >
-                        <ChevronRight className="w-8 h-8" />
-                    </button>
-                )}
+            <div id="nav-arrows" className="absolute inset-y-0 left-0 right-0 flex items-center justify-between z-[60] pointer-events-none px-4">
+                <div className="w-20 flex items-center justify-center">
+                    {currentSlide > 0 && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                            className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
+                        >
+                            <ChevronLeft className="w-8 h-8" />
+                        </button>
+                    )}
+                </div>
+                <div className="w-20 flex items-center justify-center">
+                    {currentSlide < slides.length - 1 && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                            className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
+                        >
+                            <ChevronRight className="w-8 h-8" />
+                        </button>
+                    )}
+                </div>
             </div>
 
-            <div className="absolute bottom-12 left-0 right-0 flex justify-center z-50 pointer-events-none">
+            <div id="tap-hint" className="absolute bottom-12 left-0 right-0 flex justify-center z-50 pointer-events-none">
                 <div className="sticker bg-black text-white text-sm animate-bounce">TAP OR USE ARROWS</div>
             </div>
+
+            {/* Global Progress Overlay */}
+            {isGenerating && (
+                <div id="generation-overlay" className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[200] flex flex-col items-center justify-center space-y-8 p-12 text-center">
+                    <div className="wrapped-card p-12 animate-snap bg-wrapped-yellow">
+                        <RefreshCcw className="w-24 h-24 animate-spin" />
+                    </div>
+                    <div className="space-y-4">
+                        <h2 className="text-wrapped-poster text-6xl text-white">GENERATING...</h2>
+                        <p className="text-2xl font-black italic text-wrapped-yellow uppercase tracking-tighter">{progressMessage}</p>
+                    </div>
+                    <div className="w-full max-w-md h-4 bg-white/10 rounded-full overflow-hidden border-2 border-white/20">
+                        <div
+                            className="h-full bg-wrapped-yellow transition-all duration-500"
+                            style={{ width: `${(currentSlide / (slides.length - 1)) * 100}%` }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -377,108 +546,28 @@ function ArchetypesSlide({ rankings }: { rankings: any }) {
     );
 }
 
-function SummarySlide({ data, onReset, currentSlide, setCurrentSlide, slides }: { data: any, onReset: () => void, currentSlide: number, setCurrentSlide: (slide: number) => void, slides: any[] }) {
+function SummarySlide({
+    data,
+    onReset,
+    currentSlide,
+    setCurrentSlide,
+    slides,
+    generatePDF,
+    generateImages,
+    isGenerating,
+    progressMessage
+}: {
+    data: any,
+    onReset: () => void,
+    currentSlide: number,
+    setCurrentSlide: (slide: number) => void,
+    slides: any[],
+    generatePDF: () => Promise<void>,
+    generateImages: () => Promise<void>,
+    isGenerating: boolean,
+    progressMessage: string
+}) {
     const [showShareDialog, setShowShareDialog] = useState(false);
-    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-    const [progressMessage, setProgressMessage] = useState('');
-
-    const generateImages = async () => {
-        setIsGeneratingPDF(true);
-        setProgressMessage('Preparing to capture slides...');
-        
-        try {
-            const JSZip = (await import('jszip')).default;
-            const html2canvas = (await import('html2canvas')).default;
-            
-            const zip = new JSZip();
-            const originalSlide = currentSlide;
-            
-            // Go through each slide and capture it
-            for (let i = 0; i < slides.length - 1; i++) { // Exclude summary slide
-                setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
-                
-                // Navigate to slide
-                setCurrentSlide(i);
-                
-                // Wait for slide to render and animations to complete
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Find the slide container (the whole screen)
-                const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
-                if (!slideContainer) continue;
-                
-                try {
-                    // Capture the entire screen
-                    const canvas = await html2canvas(slideContainer, {
-                        width: window.innerWidth,
-                        height: window.innerHeight,
-                        backgroundColor: null,
-                        logging: false,
-                        useCORS: true,
-                        allowTaint: true
-                    });
-                    
-                    // Convert to blob
-                    const blob = await new Promise<Blob>((resolve) => {
-                        canvas.toBlob((blob) => resolve(blob!), 'image/png', 1.0);
-                    });
-                    
-                    // Add to zip
-                    const slideId = slides[i].id;
-                    zip.file(`${String(i + 1).padStart(2, '0')}-${slideId}.png`, blob);
-                    
-                } catch (error) {
-                    console.warn(`Failed to capture slide ${i}:`, error);
-                    // Create placeholder for failed slides
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 1920;
-                    canvas.height = 1080;
-                    ctx!.fillStyle = '#FFD300';
-                    ctx!.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx!.fillStyle = '#000000';
-                    ctx!.font = '48px Arial';
-                    ctx!.textAlign = 'center';
-                    ctx!.fillText(`Slide ${i + 1}: ${slides[i].id}`, canvas.width / 2, canvas.height / 2);
-                    ctx!.fillText('(Screenshot failed)', canvas.width / 2, canvas.height / 2 + 60);
-                    
-                    const blob = await new Promise<Blob>((resolve) => {
-                        canvas.toBlob((blob) => resolve(blob!), 'image/png', 1.0);
-                    });
-                    
-                    zip.file(`${String(i + 1).padStart(2, '0')}-${slides[i].id}.png`, blob);
-                }
-            }
-            
-            setProgressMessage('Creating ZIP file...');
-            
-            // Return to original slide
-            setCurrentSlide(originalSlide);
-            
-            // Generate and download zip
-            const zipBlob = await zip.generateAsync({ type: 'blob' });
-            const url = URL.createObjectURL(zipBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'my-year-wrapped-images.zip';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            setProgressMessage('Download complete!');
-            
-        } catch (error) {
-            console.error('Error generating images:', error);
-            setProgressMessage('Error occurred. Please try again.');
-        } finally {
-            setTimeout(() => {
-                setIsGeneratingPDF(false);
-                setShowShareDialog(false);
-                setProgressMessage('');
-            }, 1000);
-        }
-    };
 
     return (
         <div className="text-center space-y-12 w-full max-w-5xl">
@@ -522,25 +611,26 @@ function SummarySlide({ data, onReset, currentSlide, setCurrentSlide, slides }: 
                         >
                             <X className="w-6 h-6" />
                         </button>
-                        
+
                         <h3 className="text-2xl font-black italic uppercase mb-6 text-center">Share Your Story</h3>
-                        
+
                         <div className="space-y-4">
                             <button
-                                onClick={generateImages}
-                                disabled={isGeneratingPDF}
+                                onClick={() => { setShowShareDialog(false); generatePDF(); }}
+                                disabled={isGenerating}
+                                className="w-full py-4 bg-wrapped-blue text-white font-black italic text-xl border-4 border-black shadow-[4px_4px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_black] transition-all flex items-center justify-center space-x-3 disabled:opacity-50"
+                            >
+                                <FileText className="w-6 h-6" />
+                                <span>DOWNLOAD AS PDF</span>
+                            </button>
+
+                            <button
+                                onClick={() => { setShowShareDialog(false); generateImages(); }}
+                                disabled={isGenerating}
                                 className="w-full py-4 bg-wrapped-pink text-white font-black italic text-xl border-4 border-black shadow-[4px_4px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_black] transition-all flex items-center justify-center space-x-3 disabled:opacity-50"
                             >
                                 <FileText className="w-6 h-6" />
-                                <span>{isGeneratingPDF ? progressMessage || 'GENERATING...' : 'SAVE AS IMAGES'}</span>
-                            </button>
-                            
-                            <button
-                                disabled
-                                className="w-full py-4 bg-gray-300 text-gray-500 font-black italic text-xl border-4 border-gray-400 shadow-[4px_4px_0px_gray-400] flex items-center justify-center space-x-3 opacity-50"
-                            >
-                                <Share2 className="w-6 h-6" />
-                                <span>OTHER FORMATS (COMING SOON)</span>
+                                <span>SAVE AS IMAGES (ZIP)</span>
                             </button>
                         </div>
                     </div>
