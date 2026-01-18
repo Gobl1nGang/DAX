@@ -174,9 +174,6 @@ export default function Home() {
 
         {/* Centered Header Section */}
         <div className="text-center space-y-8">
-          <div className="inline-block">
-            <div className="sticker sticker-entry bg-wrapped-yellow text-black text-2xl px-8 py-3 mb-6">2024 EDITION</div>
-          </div>
           <h1 ref={titleRef} className="text-wrapped-poster leading-[0.75] tracking-tighter" style={{ fontSize: 'clamp(1.5rem, 7.5vw, 10rem)' }}>
             <div className="poster-line">YOUR</div>
             <div className="poster-line text-wrapped-outline">CHAT</div>

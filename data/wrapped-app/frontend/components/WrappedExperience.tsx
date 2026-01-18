@@ -34,6 +34,9 @@ export default function WrappedExperience({ data, selectedSlideIds, onReset }: W
             let pdf: any = null;
 
             for (let i = 0; i < slides.length - 1; i++) {
+                // Skip quiz slide for downloads
+                if (slides[i].id === "quiz") continue;
+                
                 setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
                 setCurrentSlide(i);
                 await new Promise(resolve => setTimeout(resolve, 800));
@@ -102,6 +105,9 @@ export default function WrappedExperience({ data, selectedSlideIds, onReset }: W
             const originalSlide = currentSlide;
 
             for (let i = 0; i < slides.length - 1; i++) {
+                // Skip quiz slide for downloads
+                if (slides[i].id === "quiz") continue;
+                
                 setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
                 setCurrentSlide(i);
                 await new Promise(resolve => setTimeout(resolve, 800));
@@ -293,10 +299,6 @@ export default function WrappedExperience({ data, selectedSlideIds, onReset }: W
                         </button>
                     )}
                 </div>
-            </div>
-
-            <div id="tap-hint" className="absolute bottom-12 left-0 right-0 flex justify-center z-50 pointer-events-none">
-                <div className="sticker bg-black text-white text-sm animate-bounce">TAP OR USE ARROWS</div>
             </div>
 
             {/* Global Progress Overlay */}
@@ -867,7 +869,18 @@ function QuizSlide({ pool, participants }: { pool: any[], participants: string[]
             </div>
 
             {selectedAnswer && (
-                <div className="animate-snap">
+                <div className="animate-snap space-y-4">
+                    <div className={cn(
+                        "sticker text-2xl font-black uppercase",
+                        isCorrect ? "bg-wrapped-green text-black" : "bg-red-500 text-white"
+                    )}>
+                        {isCorrect ? "✓ CORRECT!" : "✗ INCORRECT!"}
+                    </div>
+                    {!isCorrect && (
+                        <div className="sticker bg-wrapped-yellow text-black text-lg">
+                            Correct answer: {currentQuestion.sender}
+                        </div>
+                    )}
                     {currentIndex < pool.length - 1 ? (
                         <button
                             onClick={nextQuestion}
