@@ -112,6 +112,7 @@ export default function NetworkGraph({ data }: NetworkGraphProps) {
                 <div className="absolute top-6 right-6 z-[100] flex bg-white/90 backdrop-blur-md p-1 rounded-2xl border-2 border-black shadow-[4px_4px_0px_black]">
                     <button
                         onClick={() => setViewMode("2D")}
+                        data-view="2D"
                         className={cn(
                             "px-6 py-2 rounded-xl text-xs font-black transition-all",
                             viewMode === "2D" ? "bg-black text-white" : "text-black hover:bg-black/5"
@@ -194,8 +195,8 @@ export default function NetworkGraph({ data }: NetworkGraphProps) {
                             }}
                             linkWidth={2}
                             linkOpacity={0.4}
-                            linkDirectionalParticles={4}
-                            linkDirectionalParticleSpeed={0.005}
+                            linkDirectionalParticles={2}
+                            linkDirectionalParticleSpeed={0.002}
                             linkDirectionalParticleWidth={3}
                             linkDirectionalParticleColor={(d: any) => {
                                 if (d.strength === "High") return "#FF4BAB";
@@ -245,7 +246,7 @@ export default function NetworkGraph({ data }: NetworkGraphProps) {
                 </div>
 
                 {/* Legend */}
-                <div className="absolute bottom-8 left-8 flex space-x-6 text-[12px] uppercase tracking-widest font-black pointer-events-none bg-white/90 backdrop-blur-md p-6 rounded-2xl border-4 border-black shadow-[6px_6px_0px_black]">
+                <div className="absolute bottom-8 left-8 flex space-x-6 text-[12px] uppercase tracking-widest font-black pointer-events-none bg-white/90 backdrop-blur-md p-6 rounded-2xl border-4 border-black shadow-[6px_6px_0px_black] text-black">
                     <div className="flex items-center space-x-3">
                         <div className="w-4 h-1 bg-[#FF4BAB]" />
                         <span>High Vibe</span>

@@ -75,7 +75,7 @@ def process_uploaded_data(files_data):
         'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't",
         'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't", 'like', 'get', 'got', 'know',
         'think', 'going', 'really', 'yeah', 'lol', 'lmao', 'good', 'well', 'much', 'see', 'want', 'one', 'even',
-        'message', 'liked', 'im', 'guys', 'sent'
+        'message', 'liked', 'im', 'guys', 'sent', 'attachment', 'dont', 'ur'
     }
 
     for file_info in files_data:
@@ -163,13 +163,23 @@ def process_uploaded_data(files_data):
                                 user_likes_given[actor] += 1
                                 likes_matrix[actor][sender] += 1
                         
-                        msg_info = {
-                            "content": message.get('content', '[Media/No Content]'),
-                            "sender": sender,
-                            "likes": like_count,
-                            "timestamp": message.get('timestamp_ms', 0)
-                        }
-                        messages_with_likes.append(msg_info)
+                        # Fix content encoding and filter out non-ASCII messages
+                        raw_content = message.get('content', '[Media/No Content]')
+                        fixed_content = fix_text(raw_content) if raw_content != '[Media/No Content]' else raw_content
+                        
+                        # Only include messages with proper ASCII content
+                        try:
+                            fixed_content.encode('ascii', 'strict')
+                            msg_info = {
+                                "content": fixed_content,
+                                "sender": sender,
+                                "likes": like_count,
+                                "timestamp": message.get('timestamp_ms', 0)
+                            }
+                            messages_with_likes.append(msg_info)
+                        except UnicodeEncodeError:
+                            # Skip messages that can't be converted to ASCII
+                            pass
 
                 # 6. Image Stats
                 if 'photos' in message or 'videos' in message or 'sticker' in message or 'gifs' in message:

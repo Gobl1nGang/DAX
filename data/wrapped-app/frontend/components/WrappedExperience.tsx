@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { animate, Timeline, stagger } from "animejs";
-import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart, Smile, Award, Users, Star } from "lucide-react";
+import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart, Smile, Award, Users, Star, FileText, X } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 
 interface WrappedExperienceProps {
@@ -14,6 +14,7 @@ import NetworkGraph from "./NetworkGraph";
 
 export default function WrappedExperience({ data, onReset }: WrappedExperienceProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [showShareDialog, setShowShareDialog] = useState(false);
     const slideRef = useRef<HTMLDivElement>(null);
 
     const slides = [
@@ -24,14 +25,20 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
         { id: "reels", component: <ReelsSlide data={data.rankings.most_reels_sent} />, bg: "bg-wrapped-purple" },
         { id: "top-liked", component: <TopLikedSlide data={data.stats.top_liked_messages} />, bg: "bg-wrapped-pink" },
         { id: "network", component: <NetworkGraph data={data.network_data} />, bg: "bg-wrapped-green" },
-        { id: "time", component: <TimeSlide night={data.rankings.night_owls} morning={data.rankings.morning_person} />, bg: "bg-wrapped-yellow" },
+        { id: "time", component: <TimeSlide night={data.rankings.night_owls} morning={data.rankings.morning_person} />, bg: "bg-gradient-to-r from-slate-900 via-slate-700 to-wrapped-yellow" },
         { id: "longest-word", component: <LongestWordSlide data={data.rankings.longest_word_sent} />, bg: "bg-wrapped-blue" },
         { id: "likes-given", component: <LikesGivenSlide data={data.rankings.most_messages_liked} />, bg: "bg-wrapped-orange" },
         { id: "profanity", component: <ProfanitySlide data={data.rankings.most_profanity} />, bg: "bg-wrapped-pink" },
         { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-green" },
         { id: "archetypes", component: <ArchetypesSlide rankings={data.rankings} />, bg: "bg-wrapped-purple" },
-        { id: "summary", component: <SummarySlide data={data} onReset={onReset} />, bg: "bg-black" },
     ];
+    
+    // Add summary slide after slides array is defined
+    slides.push({
+        id: "summary", 
+        component: <SummarySlide data={data} onReset={onReset} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} slides={slides} />, 
+        bg: "bg-black"
+    });
 
     useEffect(() => {
         if (slideRef.current) {
@@ -43,6 +50,19 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
                 easing: 'easeOutBack'
             });
         }
+    }, [currentSlide]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (event.key === 'ArrowRight') {
+                nextSlide();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [currentSlide]);
 
     const nextSlide = () => {
@@ -59,7 +79,7 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
 
     const isNetworkSlide = slides[currentSlide].id === "network";
     const isSummarySlide = slides[currentSlide].id === "summary";
-    const disableOverlays = isNetworkSlide || isSummarySlide;
+    const disableOverlays = isSummarySlide;
 
     return (
         <div className={cn("fixed inset-0 overflow-hidden flex flex-col z-50 transition-colors duration-700", slides[currentSlide].bg)}>
@@ -82,6 +102,8 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
                 <div
                     ref={slideRef}
                     key={currentSlide}
+                    data-slide={currentSlide}
+                    data-slide-id={slides[currentSlide].id}
                     className="absolute inset-0 flex items-center justify-center p-6 md:p-12"
                 >
                     {slides[currentSlide].component}
@@ -109,27 +131,6 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
                     </button>
                 )}
             </div>
-
-            {/* Special Navigation for Interactive Slides (Redundant but helpful) */}
-            {disableOverlays && (
-                <div className="absolute bottom-12 right-12 z-[70] flex space-x-4">
-                    <button
-                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                        className="p-6 bg-white border-4 border-black shadow-[6px_6px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_black] transition-all"
-                    >
-                        <ChevronLeft className="w-8 h-8" />
-                    </button>
-                    {!isSummarySlide && (
-                        <button
-                            onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                            className="px-10 py-6 bg-wrapped-green text-black font-black italic text-2xl border-4 border-black shadow-[6px_6px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_black] transition-all flex items-center space-x-3"
-                        >
-                            <span>NEXT</span>
-                            <ChevronRight className="w-8 h-8" />
-                        </button>
-                    )}
-                </div>
-            )}
 
             <div className="absolute bottom-12 left-0 right-0 flex justify-center z-50 pointer-events-none">
                 <div className="sticker bg-black text-white text-sm animate-bounce">TAP OR USE ARROWS</div>
@@ -192,7 +193,7 @@ function AuraSlide({ data }: { data: any[] }) {
             <div className="space-y-4">
                 <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40">MOST AURA</h2>
                 <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{topAura[0]}</h3>
-                <div className="sticker bg-white text-black text-2xl">RATIO: {topAura[1].toFixed(2)}</div>
+                <div className="sticker bg-white text-black text-2xl">MOST LIKE REACTIONS PER MESSAGE</div>
             </div>
         </div>
     );
@@ -203,9 +204,9 @@ function TimeSlide({ night, morning }: { night: any[], morning: any[] }) {
     const topMorning = morning[0];
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
-            <div className="wrapped-card p-12 space-y-8 -rotate-2">
+            <div className="wrapped-card p-12 space-y-8 -rotate-2 bg-slate-800 text-white border-white">
                 <div className="flex items-center space-x-4">
-                    <Moon className="w-12 h-12" />
+                    <Moon className="w-12 h-12 text-blue-200" />
                     <h3 className="text-3xl font-black italic">NIGHT OWL</h3>
                 </div>
                 <div className="space-y-2">
@@ -233,7 +234,7 @@ function ProfanitySlide({ data }: { data: any[] }) {
     return (
         <div className="text-center space-y-12">
             <div className="wrapped-card p-10 bg-black text-white rotate-12 inline-block">
-                <Ghost className="w-24 h-24" />
+                <div className="text-6xl font-black text-red-400">!#%&</div>
             </div>
             <div className="space-y-4">
                 <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40">POTTY MOUTH</h2>
@@ -281,7 +282,7 @@ function LikesGivenSlide({ data }: { data: any[] }) {
     return (
         <div className="text-center space-y-12">
             <div className="wrapped-card p-10 bg-wrapped-pink rotate-3 inline-block">
-                <Heart className="w-24 h-24 text-white" />
+                <div className="text-6xl" style={{ textShadow: '2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black' }}>😊</div>
             </div>
             <div className="space-y-4">
                 <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">CHIEF ENCOURAGER</h2>
@@ -376,7 +377,109 @@ function ArchetypesSlide({ rankings }: { rankings: any }) {
     );
 }
 
-function SummarySlide({ data, onReset }: { data: any, onReset: () => void }) {
+function SummarySlide({ data, onReset, currentSlide, setCurrentSlide, slides }: { data: any, onReset: () => void, currentSlide: number, setCurrentSlide: (slide: number) => void, slides: any[] }) {
+    const [showShareDialog, setShowShareDialog] = useState(false);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+    const [progressMessage, setProgressMessage] = useState('');
+
+    const generateImages = async () => {
+        setIsGeneratingPDF(true);
+        setProgressMessage('Preparing to capture slides...');
+        
+        try {
+            const JSZip = (await import('jszip')).default;
+            const html2canvas = (await import('html2canvas')).default;
+            
+            const zip = new JSZip();
+            const originalSlide = currentSlide;
+            
+            // Go through each slide and capture it
+            for (let i = 0; i < slides.length - 1; i++) { // Exclude summary slide
+                setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
+                
+                // Navigate to slide
+                setCurrentSlide(i);
+                
+                // Wait for slide to render and animations to complete
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Find the slide container (the whole screen)
+                const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
+                if (!slideContainer) continue;
+                
+                try {
+                    // Capture the entire screen
+                    const canvas = await html2canvas(slideContainer, {
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                        backgroundColor: null,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true
+                    });
+                    
+                    // Convert to blob
+                    const blob = await new Promise<Blob>((resolve) => {
+                        canvas.toBlob((blob) => resolve(blob!), 'image/png', 1.0);
+                    });
+                    
+                    // Add to zip
+                    const slideId = slides[i].id;
+                    zip.file(`${String(i + 1).padStart(2, '0')}-${slideId}.png`, blob);
+                    
+                } catch (error) {
+                    console.warn(`Failed to capture slide ${i}:`, error);
+                    // Create placeholder for failed slides
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 1920;
+                    canvas.height = 1080;
+                    ctx!.fillStyle = '#FFD300';
+                    ctx!.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx!.fillStyle = '#000000';
+                    ctx!.font = '48px Arial';
+                    ctx!.textAlign = 'center';
+                    ctx!.fillText(`Slide ${i + 1}: ${slides[i].id}`, canvas.width / 2, canvas.height / 2);
+                    ctx!.fillText('(Screenshot failed)', canvas.width / 2, canvas.height / 2 + 60);
+                    
+                    const blob = await new Promise<Blob>((resolve) => {
+                        canvas.toBlob((blob) => resolve(blob!), 'image/png', 1.0);
+                    });
+                    
+                    zip.file(`${String(i + 1).padStart(2, '0')}-${slides[i].id}.png`, blob);
+                }
+            }
+            
+            setProgressMessage('Creating ZIP file...');
+            
+            // Return to original slide
+            setCurrentSlide(originalSlide);
+            
+            // Generate and download zip
+            const zipBlob = await zip.generateAsync({ type: 'blob' });
+            const url = URL.createObjectURL(zipBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-year-wrapped-images.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setProgressMessage('Download complete!');
+            
+        } catch (error) {
+            console.error('Error generating images:', error);
+            setProgressMessage('Error occurred. Please try again.');
+        } finally {
+            setTimeout(() => {
+                setIsGeneratingPDF(false);
+                setShowShareDialog(false);
+                setProgressMessage('');
+            }, 1000);
+        }
+    };
+
     return (
         <div className="text-center space-y-12 w-full max-w-5xl">
             <h2 className="text-wrapped-poster text-7xl md:text-[10rem] text-white">THAT'S<br />YOUR<br />YEAR.</h2>
@@ -394,7 +497,7 @@ function SummarySlide({ data, onReset }: { data: any, onReset: () => void }) {
 
             <div className="flex flex-col md:flex-row gap-6 pt-12">
                 <button
-                    onClick={() => alert("Sharing feature coming soon!")}
+                    onClick={() => setShowShareDialog(true)}
                     className="flex-1 py-8 bg-wrapped-green text-black text-3xl font-black italic border-4 border-black shadow-[8px_8px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_black] transition-all flex items-center justify-center space-x-4"
                 >
                     <Share2 className="w-8 h-8" />
@@ -408,6 +511,41 @@ function SummarySlide({ data, onReset }: { data: any, onReset: () => void }) {
                     <span>START OVER</span>
                 </button>
             </div>
+
+            {/* Share Dialog */}
+            {showShareDialog && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+                    <div className="wrapped-card p-8 max-w-md w-full mx-4 relative">
+                        <button
+                            onClick={() => setShowShareDialog(false)}
+                            className="absolute -top-4 -right-4 p-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+                        
+                        <h3 className="text-2xl font-black italic uppercase mb-6 text-center">Share Your Story</h3>
+                        
+                        <div className="space-y-4">
+                            <button
+                                onClick={generateImages}
+                                disabled={isGeneratingPDF}
+                                className="w-full py-4 bg-wrapped-pink text-white font-black italic text-xl border-4 border-black shadow-[4px_4px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_black] transition-all flex items-center justify-center space-x-3 disabled:opacity-50"
+                            >
+                                <FileText className="w-6 h-6" />
+                                <span>{isGeneratingPDF ? progressMessage || 'GENERATING...' : 'SAVE AS IMAGES'}</span>
+                            </button>
+                            
+                            <button
+                                disabled
+                                className="w-full py-4 bg-gray-300 text-gray-500 font-black italic text-xl border-4 border-gray-400 shadow-[4px_4px_0px_gray-400] flex items-center justify-center space-x-3 opacity-50"
+                            >
+                                <Share2 className="w-6 h-6" />
+                                <span>OTHER FORMATS (COMING SOON)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
