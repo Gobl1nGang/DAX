@@ -54,6 +54,10 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
         }
     };
 
+    const isNetworkSlide = slides[currentSlide].id === "network";
+    const isSummarySlide = slides[currentSlide].id === "summary";
+    const disableOverlays = isNetworkSlide || isSummarySlide;
+
     return (
         <div className={cn("fixed inset-0 overflow-hidden flex flex-col z-50 transition-colors duration-700", slides[currentSlide].bg)}>
             {/* Progress Bar */}
@@ -81,12 +85,51 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
                 </div>
             </div>
 
-            {/* Navigation Controls */}
-            <div className="absolute inset-y-0 left-0 w-1/3 z-40 cursor-pointer" onClick={(e) => { e.stopPropagation(); prevSlide(); }} />
-            <div className="absolute inset-y-0 right-0 w-2/3 z-40 cursor-pointer" onClick={(e) => { e.stopPropagation(); nextSlide(); }} />
+            {/* Global Navigation Arrows */}
+            <div className="absolute inset-y-0 left-0 w-20 flex items-center justify-center z-[60] pointer-events-none">
+                {currentSlide > 0 && (
+                    <button
+                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                        className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
+                    >
+                        <ChevronLeft className="w-8 h-8" />
+                    </button>
+                )}
+            </div>
+            <div className="absolute inset-y-0 right-0 w-20 flex items-center justify-center z-[60] pointer-events-none">
+                {currentSlide < slides.length - 1 && (
+                    <button
+                        onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                        className="p-4 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md pointer-events-auto transition-all"
+                    >
+                        <ChevronRight className="w-8 h-8" />
+                    </button>
+                )}
+            </div>
+
+            {/* Special Navigation for Interactive Slides (Redundant but helpful) */}
+            {disableOverlays && (
+                <div className="absolute bottom-12 right-12 z-[70] flex space-x-4">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                        className="p-6 bg-white border-4 border-black shadow-[6px_6px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_black] transition-all"
+                    >
+                        <ChevronLeft className="w-8 h-8" />
+                    </button>
+                    {!isSummarySlide && (
+                        <button
+                            onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                            className="px-10 py-6 bg-wrapped-green text-black font-black italic text-2xl border-4 border-black shadow-[6px_6px_0px_black] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_black] transition-all flex items-center space-x-3"
+                        >
+                            <span>NEXT</span>
+                            <ChevronRight className="w-8 h-8" />
+                        </button>
+                    )}
+                </div>
+            )}
 
             <div className="absolute bottom-12 left-0 right-0 flex justify-center z-50 pointer-events-none">
-                <div className="sticker bg-black text-white text-sm animate-bounce">TAP TO CONTINUE</div>
+                <div className="sticker bg-black text-white text-sm animate-bounce">TAP OR USE ARROWS</div>
             </div>
         </div>
     );
