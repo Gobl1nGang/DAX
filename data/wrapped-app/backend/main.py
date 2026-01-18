@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import json
-from processor import process_uploaded_data
+from process_data import process_uploaded_data
 
 app = FastAPI()
 
