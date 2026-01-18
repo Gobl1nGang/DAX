@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { animate, Timeline, stagger } from "animejs";
-import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart } from "lucide-react";
+import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart, Smile, Award, Users, Star } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 
 interface WrappedExperienceProps {
@@ -19,14 +19,17 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
     const slides = [
         { id: "intro", component: <IntroSlide />, bg: "bg-wrapped-pink" },
         { id: "top-words", component: <TopWordsSlide data={data.stats.top_words_overall} />, bg: "bg-wrapped-green" },
-        { id: "aura", component: <AuraSlide data={data.rankings.most_aura} />, bg: "bg-wrapped-yellow" },
-        { id: "reels", component: <ReelsSlide data={data.rankings.most_reels_sent} />, bg: "bg-wrapped-blue" },
-        { id: "network", component: <NetworkGraph data={data.network_data} />, bg: "bg-wrapped-purple" },
-        { id: "time", component: <TimeSlide night={data.rankings.night_owls} morning={data.rankings.morning_person} />, bg: "bg-wrapped-pink" },
-        { id: "longest-word", component: <LongestWordSlide data={data.rankings.longest_word_sent} />, bg: "bg-wrapped-green" },
-        { id: "likes-given", component: <LikesGivenSlide data={data.rankings.most_messages_liked} />, bg: "bg-wrapped-yellow" },
-        { id: "profanity", component: <ProfanitySlide data={data.rankings.most_profanity} />, bg: "bg-wrapped-orange" },
-        { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-blue" },
+        { id: "emojis", component: <EmojiSlide data={data.stats.top_emojis} />, bg: "bg-wrapped-yellow" },
+        { id: "aura", component: <AuraSlide data={data.rankings.most_aura} />, bg: "bg-wrapped-blue" },
+        { id: "reels", component: <ReelsSlide data={data.rankings.most_reels_sent} />, bg: "bg-wrapped-purple" },
+        { id: "top-liked", component: <TopLikedSlide data={data.stats.top_liked_messages} />, bg: "bg-wrapped-pink" },
+        { id: "network", component: <NetworkGraph data={data.network_data} />, bg: "bg-wrapped-green" },
+        { id: "time", component: <TimeSlide night={data.rankings.night_owls} morning={data.rankings.morning_person} />, bg: "bg-wrapped-yellow" },
+        { id: "longest-word", component: <LongestWordSlide data={data.rankings.longest_word_sent} />, bg: "bg-wrapped-blue" },
+        { id: "likes-given", component: <LikesGivenSlide data={data.rankings.most_messages_liked} />, bg: "bg-wrapped-orange" },
+        { id: "profanity", component: <ProfanitySlide data={data.rankings.most_profanity} />, bg: "bg-wrapped-pink" },
+        { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-green" },
+        { id: "archetypes", component: <ArchetypesSlide rankings={data.rankings} />, bg: "bg-wrapped-purple" },
         { id: "summary", component: <SummarySlide data={data} onReset={onReset} />, bg: "bg-black" },
     ];
 
@@ -300,6 +303,74 @@ function RepliedToSlide({ data }: { data: any[] }) {
                 <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black/40 uppercase">MOST POPULAR</h2>
                 <h3 className="text-wrapped-poster text-8xl md:text-[10rem] text-black">{top[0]}</h3>
                 <div className="sticker bg-black text-white text-2xl">THEY GET ALL THE REPLIES</div>
+            </div>
+        </div>
+    );
+}
+
+function EmojiSlide({ data }: { data: any[] }) {
+    return (
+        <div className="text-center space-y-12">
+            <h2 className="text-wrapped-poster text-7xl md:text-9xl text-black">VIBE CHECK</h2>
+            <div className="flex flex-wrap justify-center gap-8">
+                {data.slice(0, 5).map(([emoji, count], i) => (
+                    <div key={i} className="wrapped-card p-6 flex flex-col items-center space-y-4 animate-bounce" style={{ animationDelay: `${i * 100}ms` }}>
+                        <span className="text-7xl">{emoji}</span>
+                        <span className="text-2xl font-black">{count}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="sticker bg-black text-white text-2xl rotate-3 inline-block">THE GROUP'S FAVORITES</div>
+        </div>
+    );
+}
+
+function TopLikedSlide({ data }: { data: any[] }) {
+    const top = data[0];
+    return (
+        <div className="w-full max-w-4xl space-y-12 text-center">
+            <h2 className="text-wrapped-poster text-6xl md:text-8xl text-black">HALL OF FAME</h2>
+            <div className="wrapped-card p-12 space-y-8 relative">
+                <Award className="absolute -top-8 -left-8 w-20 h-20 text-wrapped-yellow rotate-[-15deg]" />
+                <p className="text-4xl md:text-6xl font-black italic">"{top.content}"</p>
+                <div className="flex justify-between items-center pt-8 border-t-4 border-black">
+                    <div className="text-left">
+                        <p className="text-sm font-black opacity-40 uppercase">Sent by</p>
+                        <p className="text-2xl font-black uppercase">{top.sender}</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm font-black opacity-40 uppercase">Reactions</p>
+                        <p className="text-4xl font-black italic">{top.likes} LIKES</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ArchetypesSlide({ rankings }: { rankings: any }) {
+    const archetypes = [
+        { title: "THE AURA KING", name: rankings.most_aura[0][0], icon: <Zap className="w-8 h-8" />, color: "bg-wrapped-yellow" },
+        { title: "THE NIGHT OWL", name: rankings.night_owls[0][0], icon: <Moon className="w-8 h-8" />, color: "bg-wrapped-purple text-white" },
+        { title: "THE REEL ADDICT", name: rankings.most_reels_sent[0][0], icon: <Music className="w-8 h-8" />, color: "bg-wrapped-blue text-white" },
+        { title: "THE POTTY MOUTH", name: rankings.most_profanity[0][0], icon: <Ghost className="w-8 h-8" />, color: "bg-black text-white" },
+        { title: "THE ENCOURAGER", name: rankings.most_messages_liked[0][0], icon: <Heart className="w-8 h-8" />, color: "bg-wrapped-pink text-white" },
+        { title: "THE POPULAR ONE", name: rankings.most_replied_to[0][0], icon: <Star className="w-8 h-8" />, color: "bg-wrapped-green" },
+    ];
+
+    return (
+        <div className="w-full max-w-5xl space-y-12">
+            <h2 className="text-wrapped-poster text-6xl md:text-8xl text-black text-center">THE SQUAD ROSTER</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {archetypes.map((arc, i) => (
+                    <div key={i} className={cn("wrapped-card p-6 space-y-4 rotate-1", arc.color)}>
+                        <div className="flex items-center space-x-3">
+                            {arc.icon}
+                            <p className="text-xs font-black uppercase opacity-60">{arc.title}</p>
+                        </div>
+                        <p className="text-2xl font-black uppercase italic">{arc.name}</p>
+                    </div>
+                ))}
             </div>
         </div>
     );
