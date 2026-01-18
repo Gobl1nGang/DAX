@@ -1,0 +1,1179 @@
+{
+  "nodes": [
+    {
+      "id": "Adam Tsang"
+    },
+    {
+      "id": "Angel H."
+    },
+    {
+      "id": "Daxton"
+    },
+    {
+      "id": "Dora"
+    },
+    {
+      "id": "Elden"
+    },
+    {
+      "id": "Jonathan Ko"
+    },
+    {
+      "id": "Luis Guevara"
+    },
+    {
+      "id": "Meta AI"
+    },
+    {
+      "id": "Mulisa"
+    },
+    {
+      "id": "Rafee Ahsan"
+    },
+    {
+      "id": "Roy zheng"
+    },
+    {
+      "id": "Thomas Ah Sing"
+    },
+    {
+      "id": "V"
+    },
+    {
+      "id": "adrian"
+    },
+    {
+      "id": "ambrose lee"
+    },
+    {
+      "id": "annie ྀི"
+    },
+    {
+      "id": "avery"
+    },
+    {
+      "id": "bosco"
+    },
+    {
+      "id": "jenica"
+    },
+    {
+      "id": "jocelyn"
+    }
+  ],
+  "links": [
+    {
+      "source": "Adam Tsang",
+      "target": "Angel H.",
+      "value": 27,
+      "ratio": 0.01882845188284519,
+      "strength": "Low"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Daxton",
+      "value": 269,
+      "ratio": 0.019519628473985924,
+      "strength": "Low"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Dora",
+      "value": 69,
+      "ratio": 0.017245688577855536,
+      "strength": "Low"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Elden",
+      "value": 410,
+      "ratio": 0.0353570196619524,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Jonathan Ko",
+      "value": 321,
+      "ratio": 0.04105384320245556,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Luis Guevara",
+      "value": 192,
+      "ratio": 0.035934868051656375,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Mulisa",
+      "value": 27,
+      "ratio": 0.020610687022900764,
+      "strength": "Low"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Rafee Ahsan",
+      "value": 133,
+      "ratio": 0.026999593991067803,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Roy zheng",
+      "value": 150,
+      "ratio": 0.030870549495781024,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "Thomas Ah Sing",
+      "value": 107,
+      "ratio": 0.032209512341962676,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "V",
+      "value": 98,
+      "ratio": 0.0275049115913556,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "adrian",
+      "value": 122,
+      "ratio": 0.036869144756724086,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "ambrose lee",
+      "value": 103,
+      "ratio": 0.06758530183727034,
+      "strength": "High"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "annie ྀི",
+      "value": 454,
+      "ratio": 0.05119530897609382,
+      "strength": "High"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "avery",
+      "value": 130,
+      "ratio": 0.03675431156347187,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "bosco",
+      "value": 48,
+      "ratio": 0.02342606149341142,
+      "strength": "Medium"
+    },
+    {
+      "source": "Adam Tsang",
+      "target": "jocelyn",
+      "value": 217,
+      "ratio": 0.024689953350779382,
+      "strength": "Medium"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Daxton",
+      "value": 19,
+      "ratio": 0.0014968880485306862,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Dora",
+      "value": 9,
+      "ratio": 0.003089598352214212,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Elden",
+      "value": 31,
+      "ratio": 0.0029501332318233727,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Jonathan Ko",
+      "value": 53,
+      "ratio": 0.007874015748031496,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Luis Guevara",
+      "value": 13,
+      "ratio": 0.003055229142185664,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Roy zheng",
+      "value": 18,
+      "ratio": 0.00477326968973747,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "Thomas Ah Sing",
+      "value": 5,
+      "ratio": 0.0022381378692927483,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "V",
+      "value": 10,
+      "ratio": 0.00404040404040404,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "ambrose lee",
+      "value": 5,
+      "ratio": 0.011467889908256881,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "annie ྀི",
+      "value": 44,
+      "ratio": 0.005655526992287918,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "avery",
+      "value": 13,
+      "ratio": 0.005308289097590854,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "bosco",
+      "value": 6,
+      "ratio": 0.006243496357960458,
+      "strength": "Low"
+    },
+    {
+      "source": "Angel H.",
+      "target": "jocelyn",
+      "value": 23,
+      "ratio": 0.0029866251136216075,
+      "strength": "Low"
+    },
+    {
+      "source": "Daxton",
+      "target": "Dora",
+      "value": 463,
+      "ratio": 0.030340760157273917,
+      "strength": "Medium"
+    },
+    {
+      "source": "Daxton",
+      "target": "Elden",
+      "value": 2579,
+      "ratio": 0.11284182892146138,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "Jonathan Ko",
+      "value": 2025,
+      "ratio": 0.10614320159345843,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "Luis Guevara",
+      "value": 1975,
+      "ratio": 0.11896157089507288,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "Meta AI",
+      "value": 7,
+      "ratio": 0.0005591054313099042,
+      "strength": "Low"
+    },
+    {
+      "source": "Daxton",
+      "target": "Mulisa",
+      "value": 52,
+      "ratio": 0.00413716286100724,
+      "strength": "Low"
+    },
+    {
+      "source": "Daxton",
+      "target": "Rafee Ahsan",
+      "value": 993,
+      "ratio": 0.0613531047265987,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "Roy zheng",
+      "value": 917,
+      "ratio": 0.05689291475369152,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "Thomas Ah Sing",
+      "value": 879,
+      "ratio": 0.06028393114326864,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "V",
+      "value": 943,
+      "ratio": 0.06362164350290109,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "adrian",
+      "value": 424,
+      "ratio": 0.029104887424492038,
+      "strength": "Medium"
+    },
+    {
+      "source": "Daxton",
+      "target": "ambrose lee",
+      "value": 296,
+      "ratio": 0.023155753735429867,
+      "strength": "Medium"
+    },
+    {
+      "source": "Daxton",
+      "target": "annie ྀི",
+      "value": 2681,
+      "ratio": 0.1332041536244845,
+      "strength": "High"
+    },
+    {
+      "source": "Daxton",
+      "target": "avery",
+      "value": 483,
+      "ratio": 0.03264395782643958,
+      "strength": "Medium"
+    },
+    {
+      "source": "Daxton",
+      "target": "bosco",
+      "value": 320,
+      "ratio": 0.024045686804929366,
+      "strength": "Medium"
+    },
+    {
+      "source": "Daxton",
+      "target": "jocelyn",
+      "value": 2297,
+      "ratio": 0.11457501995211493,
+      "strength": "High"
+    },
+    {
+      "source": "Dora",
+      "target": "Elden",
+      "value": 598,
+      "ratio": 0.045736137667304014,
+      "strength": "Medium"
+    },
+    {
+      "source": "Dora",
+      "target": "Jonathan Ko",
+      "value": 535,
+      "ratio": 0.05753925575392557,
+      "strength": "High"
+    },
+    {
+      "source": "Dora",
+      "target": "Luis Guevara",
+      "value": 383,
+      "ratio": 0.05614189387276459,
+      "strength": "High"
+    },
+    {
+      "source": "Dora",
+      "target": "Mulisa",
+      "value": 10,
+      "ratio": 0.0035855145213338113,
+      "strength": "Low"
+    },
+    {
+      "source": "Dora",
+      "target": "Rafee Ahsan",
+      "value": 153,
+      "ratio": 0.023887587822014052,
+      "strength": "Medium"
+    },
+    {
+      "source": "Dora",
+      "target": "Roy zheng",
+      "value": 155,
+      "ratio": 0.024455664247396654,
+      "strength": "Medium"
+    },
+    {
+      "source": "Dora",
+      "target": "Thomas Ah Sing",
+      "value": 99,
+      "ratio": 0.020620704019995835,
+      "strength": "Low"
+    },
+    {
+      "source": "Dora",
+      "target": "V",
+      "value": 187,
+      "ratio": 0.03708845696152321,
+      "strength": "Medium"
+    },
+    {
+      "source": "Dora",
+      "target": "adrian",
+      "value": 81,
+      "ratio": 0.016917293233082706,
+      "strength": "Low"
+    },
+    {
+      "source": "Dora",
+      "target": "ambrose lee",
+      "value": 66,
+      "ratio": 0.02197802197802198,
+      "strength": "Low"
+    },
+    {
+      "source": "Dora",
+      "target": "annie ྀི",
+      "value": 619,
+      "ratio": 0.05982410360490963,
+      "strength": "High"
+    },
+    {
+      "source": "Dora",
+      "target": "avery",
+      "value": 86,
+      "ratio": 0.0171451355661882,
+      "strength": "Low"
+    },
+    {
+      "source": "Dora",
+      "target": "bosco",
+      "value": 151,
+      "ratio": 0.042800453514739226,
+      "strength": "Medium"
+    },
+    {
+      "source": "Dora",
+      "target": "jocelyn",
+      "value": 630,
+      "ratio": 0.06135566809505259,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "Jonathan Ko",
+      "value": 1772,
+      "ratio": 0.10489551885396318,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "Luis Guevara",
+      "value": 2181,
+      "ratio": 0.1512797391967816,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "Meta AI",
+      "value": 3,
+      "ratio": 0.00029027576197387516,
+      "strength": "Low"
+    },
+    {
+      "source": "Elden",
+      "target": "Mulisa",
+      "value": 54,
+      "ratio": 0.005200308166409861,
+      "strength": "Low"
+    },
+    {
+      "source": "Elden",
+      "target": "Rafee Ahsan",
+      "value": 1203,
+      "ratio": 0.08592857142857142,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "Roy zheng",
+      "value": 1182,
+      "ratio": 0.08483456542022537,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "Thomas Ah Sing",
+      "value": 1008,
+      "ratio": 0.08131655372700872,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "V",
+      "value": 1237,
+      "ratio": 0.0978871567618897,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "adrian",
+      "value": 713,
+      "ratio": 0.05757893886780263,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "ambrose lee",
+      "value": 270,
+      "ratio": 0.025476505000943575,
+      "strength": "Medium"
+    },
+    {
+      "source": "Elden",
+      "target": "annie ྀི",
+      "value": 2883,
+      "ratio": 0.1606844276000446,
+      "strength": "High"
+    },
+    {
+      "source": "Elden",
+      "target": "avery",
+      "value": 634,
+      "ratio": 0.05027357069225279,
+      "strength": "Medium"
+    },
+    {
+      "source": "Elden",
+      "target": "bosco",
+      "value": 436,
+      "ratio": 0.039198058077856694,
+      "strength": "Medium"
+    },
+    {
+      "source": "Elden",
+      "target": "jenica",
+      "value": 1,
+      "ratio": 9.67305088024763e-05,
+      "strength": "Low"
+    },
+    {
+      "source": "Elden",
+      "target": "jocelyn",
+      "value": 1898,
+      "ratio": 0.10625314896713878,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Luis Guevara",
+      "value": 1095,
+      "ratio": 0.10291353383458647,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Meta AI",
+      "value": 1,
+      "ratio": 0.00015248551387618176,
+      "strength": "Low"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Mulisa",
+      "value": 40,
+      "ratio": 0.006054184955350386,
+      "strength": "Low"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Rafee Ahsan",
+      "value": 487,
+      "ratio": 0.04763767974175878,
+      "strength": "Medium"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Roy zheng",
+      "value": 657,
+      "ratio": 0.0646908231587239,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "Thomas Ah Sing",
+      "value": 598,
+      "ratio": 0.0693815987933635,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "V",
+      "value": 582,
+      "ratio": 0.06568848758465011,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "adrian",
+      "value": 222,
+      "ratio": 0.025795956309551477,
+      "strength": "Medium"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "ambrose lee",
+      "value": 264,
+      "ratio": 0.03870400234569711,
+      "strength": "Medium"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "annie ྀི",
+      "value": 1718,
+      "ratio": 0.12128485704200494,
+      "strength": "High"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "avery",
+      "value": 433,
+      "ratio": 0.049015168666515736,
+      "strength": "Medium"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "bosco",
+      "value": 373,
+      "ratio": 0.05077593248026137,
+      "strength": "Medium"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "jenica",
+      "value": 1,
+      "ratio": 0.00015241579027587258,
+      "strength": "Low"
+    },
+    {
+      "source": "Jonathan Ko",
+      "target": "jocelyn",
+      "value": 1818,
+      "ratio": 0.12906431918216668,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "Mulisa",
+      "value": 37,
+      "ratio": 0.008956669087388042,
+      "strength": "Low"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "Rafee Ahsan",
+      "value": 751,
+      "ratio": 0.0969407512585517,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "Roy zheng",
+      "value": 741,
+      "ratio": 0.096484375,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "Thomas Ah Sing",
+      "value": 665,
+      "ratio": 0.10825329643496663,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "V",
+      "value": 586,
+      "ratio": 0.09179197994987469,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "adrian",
+      "value": 457,
+      "ratio": 0.07455138662316477,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "ambrose lee",
+      "value": 208,
+      "ratio": 0.04787111622554661,
+      "strength": "Medium"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "annie ྀི",
+      "value": 1240,
+      "ratio": 0.10608264179998289,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "avery",
+      "value": 335,
+      "ratio": 0.052689525007864106,
+      "strength": "High"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "bosco",
+      "value": 151,
+      "ratio": 0.031006160164271046,
+      "strength": "Medium"
+    },
+    {
+      "source": "Luis Guevara",
+      "target": "jocelyn",
+      "value": 1556,
+      "ratio": 0.13402239448751077,
+      "strength": "High"
+    },
+    {
+      "source": "Meta AI",
+      "target": "Roy zheng",
+      "value": 4,
+      "ratio": 0.0011117287381878821,
+      "strength": "Low"
+    },
+    {
+      "source": "Meta AI",
+      "target": "annie ྀི",
+      "value": 3,
+      "ratio": 0.0003943736032601551,
+      "strength": "Low"
+    },
+    {
+      "source": "Meta AI",
+      "target": "jocelyn",
+      "value": 2,
+      "ratio": 0.00026567481402763017,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "Rafee Ahsan",
+      "value": 24,
+      "ratio": 0.006462035541195477,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "Roy zheng",
+      "value": 23,
+      "ratio": 0.006306553331505347,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "Thomas Ah Sing",
+      "value": 5,
+      "ratio": 0.002369668246445498,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "V",
+      "value": 14,
+      "ratio": 0.005954912803062527,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "adrian",
+      "value": 14,
+      "ratio": 0.006676204101096805,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "ambrose lee",
+      "value": 4,
+      "ratio": 0.01282051282051282,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "annie ྀི",
+      "value": 58,
+      "ratio": 0.007575757575757576,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "avery",
+      "value": 3,
+      "ratio": 0.0012903225806451613,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "bosco",
+      "value": 1,
+      "ratio": 0.0011947431302270011,
+      "strength": "Low"
+    },
+    {
+      "source": "Mulisa",
+      "target": "jocelyn",
+      "value": 16,
+      "ratio": 0.0021116536887950377,
+      "strength": "Low"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "Roy zheng",
+      "value": 487,
+      "ratio": 0.06705218229381799,
+      "strength": "High"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "Thomas Ah Sing",
+      "value": 337,
+      "ratio": 0.05885434858539993,
+      "strength": "High"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "V",
+      "value": 221,
+      "ratio": 0.037037037037037035,
+      "strength": "Medium"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "adrian",
+      "value": 300,
+      "ratio": 0.05251181515841064,
+      "strength": "High"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "ambrose lee",
+      "value": 90,
+      "ratio": 0.022912423625254582,
+      "strength": "Medium"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "annie ྀི",
+      "value": 564,
+      "ratio": 0.05003548616039744,
+      "strength": "Medium"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "avery",
+      "value": 139,
+      "ratio": 0.023396734556471975,
+      "strength": "Medium"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "bosco",
+      "value": 80,
+      "ratio": 0.01796541657309679,
+      "strength": "Low"
+    },
+    {
+      "source": "Rafee Ahsan",
+      "target": "jocelyn",
+      "value": 502,
+      "ratio": 0.04484945948360582,
+      "strength": "Medium"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "Thomas Ah Sing",
+      "value": 341,
+      "ratio": 0.06025799611238735,
+      "strength": "High"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "V",
+      "value": 202,
+      "ratio": 0.03423728813559322,
+      "strength": "Medium"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "adrian",
+      "value": 235,
+      "ratio": 0.0416223875309954,
+      "strength": "Medium"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "ambrose lee",
+      "value": 84,
+      "ratio": 0.021756021756021756,
+      "strength": "Low"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "annie ྀི",
+      "value": 858,
+      "ratio": 0.07657295850066935,
+      "strength": "High"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "avery",
+      "value": 186,
+      "ratio": 0.031664964249233915,
+      "strength": "Medium"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "bosco",
+      "value": 205,
+      "ratio": 0.046739626082991335,
+      "strength": "Medium"
+    },
+    {
+      "source": "Roy zheng",
+      "target": "jocelyn",
+      "value": 600,
+      "ratio": 0.053927736832644256,
+      "strength": "High"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "V",
+      "value": 275,
+      "ratio": 0.06303002521201008,
+      "strength": "High"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "adrian",
+      "value": 180,
+      "ratio": 0.04380627889997566,
+      "strength": "Medium"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "ambrose lee",
+      "value": 105,
+      "ratio": 0.045180722891566265,
+      "strength": "Medium"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "annie ྀི",
+      "value": 601,
+      "ratio": 0.06216383947041788,
+      "strength": "High"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "avery",
+      "value": 130,
+      "ratio": 0.029974636845745906,
+      "strength": "Medium"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "bosco",
+      "value": 42,
+      "ratio": 0.014742014742014743,
+      "strength": "Low"
+    },
+    {
+      "source": "Thomas Ah Sing",
+      "target": "jocelyn",
+      "value": 500,
+      "ratio": 0.05214308061320263,
+      "strength": "High"
+    },
+    {
+      "source": "V",
+      "target": "adrian",
+      "value": 241,
+      "ratio": 0.05540229885057471,
+      "strength": "High"
+    },
+    {
+      "source": "V",
+      "target": "ambrose lee",
+      "value": 33,
+      "ratio": 0.012865497076023392,
+      "strength": "Low"
+    },
+    {
+      "source": "V",
+      "target": "annie ྀི",
+      "value": 940,
+      "ratio": 0.0948632556261984,
+      "strength": "High"
+    },
+    {
+      "source": "V",
+      "target": "avery",
+      "value": 113,
+      "ratio": 0.024683267802533857,
+      "strength": "Medium"
+    },
+    {
+      "source": "V",
+      "target": "bosco",
+      "value": 118,
+      "ratio": 0.038187702265372166,
+      "strength": "Medium"
+    },
+    {
+      "source": "V",
+      "target": "jocelyn",
+      "value": 702,
+      "ratio": 0.07141403865717193,
+      "strength": "High"
+    },
+    {
+      "source": "adrian",
+      "target": "ambrose lee",
+      "value": 50,
+      "ratio": 0.021635655560363478,
+      "strength": "Low"
+    },
+    {
+      "source": "adrian",
+      "target": "annie ྀི",
+      "value": 384,
+      "ratio": 0.03977213878819265,
+      "strength": "Medium"
+    },
+    {
+      "source": "adrian",
+      "target": "avery",
+      "value": 52,
+      "ratio": 0.012025901942645698,
+      "strength": "Low"
+    },
+    {
+      "source": "adrian",
+      "target": "bosco",
+      "value": 16,
+      "ratio": 0.005641748942172073,
+      "strength": "Low"
+    },
+    {
+      "source": "adrian",
+      "target": "jocelyn",
+      "value": 338,
+      "ratio": 0.03529657477025898,
+      "strength": "Medium"
+    },
+    {
+      "source": "ambrose lee",
+      "target": "annie ྀི",
+      "value": 205,
+      "ratio": 0.026048284625158832,
+      "strength": "Medium"
+    },
+    {
+      "source": "ambrose lee",
+      "target": "avery",
+      "value": 45,
+      "ratio": 0.017723513194170933,
+      "strength": "Low"
+    },
+    {
+      "source": "ambrose lee",
+      "target": "bosco",
+      "value": 17,
+      "ratio": 0.016175071360608945,
+      "strength": "Low"
+    },
+    {
+      "source": "ambrose lee",
+      "target": "jocelyn",
+      "value": 223,
+      "ratio": 0.028622769862662045,
+      "strength": "Medium"
+    },
+    {
+      "source": "annie ྀི",
+      "target": "avery",
+      "value": 686,
+      "ratio": 0.06941212182535668,
+      "strength": "High"
+    },
+    {
+      "source": "annie ྀི",
+      "target": "bosco",
+      "value": 319,
+      "ratio": 0.0379988088147707,
+      "strength": "Medium"
+    },
+    {
+      "source": "annie ྀི",
+      "target": "jocelyn",
+      "value": 2458,
+      "ratio": 0.16240502147340602,
+      "strength": "High"
+    },
+    {
+      "source": "avery",
+      "target": "bosco",
+      "value": 84,
+      "ratio": 0.02741514360313316,
+      "strength": "Medium"
+    },
+    {
+      "source": "avery",
+      "target": "jocelyn",
+      "value": 284,
+      "ratio": 0.028967768257853937,
+      "strength": "Medium"
+    },
+    {
+      "source": "bosco",
+      "target": "jenica",
+      "value": 1,
+      "ratio": 0.0012642225031605564,
+      "strength": "Low"
+    },
+    {
+      "source": "bosco",
+      "target": "jocelyn",
+      "value": 386,
+      "ratio": 0.04641654641654642,
+      "strength": "Medium"
+    }
+  ]
+}

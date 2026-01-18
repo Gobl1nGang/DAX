@@ -1,0 +1,348 @@
+{
+  "night_owls": [
+    [
+      "Luis Guevara",
+      2107
+    ],
+    [
+      "Elden",
+      2089
+    ],
+    [
+      "annie ྀི",
+      1492
+    ],
+    [
+      "jocelyn",
+      1098
+    ],
+    [
+      "Jonathan Ko",
+      814
+    ],
+    [
+      "Thomas Ah Sing",
+      796
+    ],
+    [
+      "Daxton",
+      692
+    ],
+    [
+      "avery",
+      578
+    ],
+    [
+      "Dora",
+      459
+    ],
+    [
+      "Roy zheng",
+      457
+    ]
+  ],
+  "morning_person": [
+    [
+      "annie ྀི",
+      1701
+    ],
+    [
+      "Luis Guevara",
+      1598
+    ],
+    [
+      "Elden",
+      1580
+    ],
+    [
+      "V",
+      876
+    ],
+    [
+      "Roy zheng",
+      839
+    ],
+    [
+      "jocelyn",
+      829
+    ],
+    [
+      "avery",
+      699
+    ],
+    [
+      "Daxton",
+      542
+    ],
+    [
+      "Jonathan Ko",
+      502
+    ],
+    [
+      "Rafee Ahsan",
+      433
+    ]
+  ],
+  "most_replied_to": [
+    [
+      "annie ྀི",
+      7262
+    ],
+    [
+      "Elden",
+      7243
+    ],
+    [
+      "Luis Guevara",
+      6645
+    ],
+    [
+      "jocelyn",
+      4846
+    ],
+    [
+      "Daxton",
+      4556
+    ],
+    [
+      "Jonathan Ko",
+      4000
+    ],
+    [
+      "V",
+      3303
+    ],
+    [
+      "Thomas Ah Sing",
+      2762
+    ],
+    [
+      "Roy zheng",
+      2744
+    ],
+    [
+      "Rafee Ahsan",
+      2133
+    ]
+  ],
+  "most_reels_sent": [
+    [
+      "Elden",
+      320
+    ],
+    [
+      "annie ྀི",
+      208
+    ],
+    [
+      "Jonathan Ko",
+      121
+    ],
+    [
+      "jocelyn",
+      74
+    ],
+    [
+      "Rafee Ahsan",
+      68
+    ],
+    [
+      "Dora",
+      61
+    ],
+    [
+      "Daxton",
+      40
+    ],
+    [
+      "Roy zheng",
+      35
+    ],
+    [
+      "V",
+      33
+    ],
+    [
+      "Luis Guevara",
+      29
+    ]
+  ],
+  "longest_word_sent": [
+    {
+      "user": "bosco",
+      "word": "pacificislanderwhoeatsmangoesandcoconutsonly",
+      "length": 44
+    },
+    {
+      "user": "annie ྀི",
+      "word": "shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
+      "length": 38
+    },
+    {
+      "user": "avery",
+      "word": "teheheehheheheehehehheeheheh",
+      "length": 28
+    },
+    {
+      "user": "Jonathan Ko",
+      "word": "hahahahahhahahahahahahahaha",
+      "length": 27
+    },
+    {
+      "user": "Roy zheng",
+      "word": "uhhhhhhhhhhhhhhhhhhhhhhhhh",
+      "length": 26
+    },
+    {
+      "user": "V",
+      "word": "Ohhhhhhhhhhhhhhhhhhhhh",
+      "length": 22
+    },
+    {
+      "user": "Luis Guevara",
+      "word": "Eastasianpinoymaxxing",
+      "length": 21
+    },
+    {
+      "user": "Daxton",
+      "word": "veronicazhangharvey",
+      "length": 19
+    },
+    {
+      "user": "jocelyn",
+      "word": "veronicazhangharvey",
+      "length": 19
+    },
+    {
+      "user": "Elden",
+      "word": "veronicazhangharvey",
+      "length": 19
+    }
+  ],
+  "most_aura": [
+    [
+      "Mulisa",
+      2.3125
+    ],
+    [
+      "Meta AI",
+      1.3333333333333333
+    ],
+    [
+      "bosco",
+      1.3328822733423544
+    ],
+    [
+      "Adam Tsang",
+      1.146099290780142
+    ],
+    [
+      "ambrose lee",
+      1.138801261829653
+    ],
+    [
+      "Angel H.",
+      1.10752688172043
+    ],
+    [
+      "adrian",
+      1.0613825983313467
+    ],
+    [
+      "Jonathan Ko",
+      1.0037412314886984
+    ],
+    [
+      "Thomas Ah Sing",
+      0.962421185372005
+    ],
+    [
+      "Rafee Ahsan",
+      0.9468876860622463
+    ]
+  ],
+  "most_messages_liked": [
+    [
+      "Daxton",
+      12520
+    ],
+    [
+      "Elden",
+      10335
+    ],
+    [
+      "annie ྀི",
+      7607
+    ],
+    [
+      "jocelyn",
+      7528
+    ],
+    [
+      "Jonathan Ko",
+      6558
+    ],
+    [
+      "Luis Guevara",
+      4082
+    ],
+    [
+      "Rafee Ahsan",
+      3665
+    ],
+    [
+      "Roy zheng",
+      3598
+    ],
+    [
+      "Dora",
+      2740
+    ],
+    [
+      "V",
+      2302
+    ]
+  ],
+  "most_profanity": [
+    [
+      "Luis Guevara",
+      952
+    ],
+    [
+      "Elden",
+      938
+    ],
+    [
+      "Roy zheng",
+      403
+    ],
+    [
+      "annie ྀི",
+      368
+    ],
+    [
+      "V",
+      334
+    ],
+    [
+      "jocelyn",
+      332
+    ],
+    [
+      "Daxton",
+      231
+    ],
+    [
+      "Rafee Ahsan",
+      191
+    ],
+    [
+      "avery",
+      146
+    ],
+    [
+      "Thomas Ah Sing",
+      139
+    ]
+  ]
+}
