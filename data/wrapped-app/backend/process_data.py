@@ -5,20 +5,18 @@ import re
 from collections import defaultdict, Counter
 from datetime import datetime, timezone, timedelta
 
+
 def fix_text(text):
-    if not isinstance(text, str):
+    if not isinstance(text, str) or not text:
         return text
     try:
         # Facebook JSON often encodes UTF-8 bytes as Latin-1 characters.
-        # We encode to latin1 to get the raw bytes, then decode as utf-8.
         return text.encode('latin1').decode('utf-8')
     except (UnicodeEncodeError, UnicodeDecodeError):
         try:
-            # Sometimes it's interpreted as CP1252 (Windows-1252).
             return text.encode('cp1252').decode('utf-8')
         except:
             return text
-    return text
 
 def is_url(text):
     if not isinstance(text, str):
@@ -31,8 +29,6 @@ def process_uploaded_data(files_data):
     user_word_counts = defaultdict(Counter)
     total_word_counts = Counter()
     messages_with_likes = []
-    emoji_counts = Counter()
-    user_emoji_counts = Counter()
     user_image_counts = Counter()
 
     # Special Rankings Data
@@ -43,22 +39,13 @@ def process_uploaded_data(files_data):
     user_longest_words = defaultdict(lambda: {"word": "", "length": 0})
     user_likes_given = Counter() # Most Messages Liked
     likes_matrix = defaultdict(lambda: defaultdict(int)) # actor -> sender likes
+    user_total_chars = Counter()
+    month_counts = Counter()
     
-    # Regex for detecting emojis (broad range)
-    emoji_pattern = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
-    
-    # Profanity patterns for variations like fuckkkk, fucking, etc.
-    profanity_patterns = [
-        re.compile(r'\b[fF]+[uU]+[cC]+[kK]+[a-zA-Z]*\b'),
-        re.compile(r'\b[sS]+[hH]+[iI]+[tT]+[a-zA-Z]*\b'),
-        re.compile(r'\b[bB]+[iI]+[tT]+[cC]+[hH]+[a-zA-Z]*\b'),
-        re.compile(r'\b[dD]+[aA]+[mM]+[nN]+[a-zA-Z]*\b'),
-        re.compile(r'\b[aA]+[sS]+[sS]+[a-zA-Z]*\b'),
-        re.compile(r'\b[hH]+[eE]+[lL]+[lL]+[a-zA-Z]*\b')
-    ]
+    # Combined profanity pattern for faster matching
+    _PROFANITY_RE = re.compile(r'\b([fF]+[uU]+[cC]+[kK]+|[sS]+[hH]+[iI]+[tT]+|[bB]+[iI]+[tT]+[cC]+[hH]+|[dD]+[aA]+[mM]+[nN]+|[aA]+[sS]+[sS]+|[hH]+[eE]+[lL]+[lL]+)[a-zA-Z]*\b')
     user_profanity_counts = Counter()
 
-    # Comprehensive Stopwords List
     STOPWORDS = {
         'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd",
         'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers',
@@ -75,7 +62,12 @@ def process_uploaded_data(files_data):
         'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't",
         'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't", 'like', 'get', 'got', 'know',
         'think', 'going', 'really', 'yeah', 'lol', 'lmao', 'good', 'well', 'much', 'see', 'want', 'one', 'even',
-        'message', 'liked', 'im', 'guys', 'sent', 'attachment', 'dont', 'ur', 'thats'
+        'message', 'liked', 'im', 'guys', 'sent', 'attachment', 'dont', 'ur', 'thats',
+        'yeah', 'yes', 'no', 'ok', 'okay', 'like', 'get', 'got', 'know', 'think', 'going',
+        'really', 'good', 'well', 'much', 'see', 'want', 'one', 'even', 'right', 'mean',
+        'thing', 'things', 'still', 'actually', 'probably', 'maybe', 'sure', 'back',
+        'come', 'take', 'look', 'want', 'gonna', 'wanna', 'gotta', 'lol', 'lmao', 'lmfao',
+        'haha', 'hahaha', 'ah', 'oh', 'hey', 'hi', 'hello'
     }
 
     # Small mapping to expand common contractions so we don't end up with tokens like "thats"
@@ -134,65 +126,27 @@ def process_uploaded_data(files_data):
         'its': 'it is'
     }
 
+    # Pre-compile contractions regex for speed
+    _CONTRACTIONS_RE = re.compile(r'\b(' + '|'.join(re.escape(key) for key in CONTRACTIONS_MAP.keys()) + r')\b', re.IGNORECASE)
+
     def expand_contractions(text):
-        if not isinstance(text, str):
+        if not isinstance(text, str) or not text:
             return text
         # Normalize simple unicode apostrophes
         t = text.replace('\u2019', "'").replace('\u2018', "'")
-        # Lowercase for mapping while preserving original for later fixes
-        low = t.lower()
-        for c, exp in CONTRACTIONS_MAP.items():
-            # use word boundaries so we don't replace within words
-            low = re.sub(rf"\b{re.escape(c)}\b", exp, low)
-        return low
+        return _CONTRACTIONS_RE.sub(lambda m: CONTRACTIONS_MAP.get(m.group(0).lower(), m.group(0)), t.lower())
 
-    # POS filtering helper: keep only nouns, verbs, or interjections
-    def _filter_words_by_pos(words):
-        if not words:
-            return []
-        # Try spaCy first (best quality)
-        try:
-            import spacy
-            try:
-                nlp = spacy.load('en_core_web_sm')
-            except Exception:
-                nlp = None
-            if nlp is not None:
-                doc = nlp(' '.join(words))
-                allowed = []
-                for tok in doc:
-                    # Only accept single-token alphabetical words
-                    if tok.pos_ in ('NOUN', 'PROPN', 'VERB', 'INTJ') and re.match(r'^[A-Za-z]+$', tok.text):
-                        allowed.append(tok.text.lower())
-                return allowed
-        except Exception:
-            pass
-        # Try NLTK as a fallback
-        try:
-            import nltk
-            tagged = nltk.pos_tag(words)
-            allowed = []
-            for w, tag in tagged:
-                if (tag.startswith('NN') or tag.startswith('VB') or tag == 'UH') and re.match(r'^[A-Za-z]+$', w):
-                    allowed.append(w.lower())
-            return allowed
-        except Exception:
-            pass
-        # Heuristic fallback: allow common interjections or words that look like nouns/verbs
-        interjections = {'wow', 'oh', 'hey', 'huh', 'ouch', 'yay', 'ugh', 'hmm', 'ha', 'haha', 'yikes', 'oops'}
+    # Fast word filter heuristic
+    def _fast_filter_words(words):
         allowed = []
         for w in words:
             wl = w.lower()
-            if wl in interjections:
-                allowed.append(wl)
-                continue
+            if len(wl) <= 2: continue
+            if wl in STOPWORDS: continue
+            # Simple heuristic: ignore common pronouns/determiners that might have slipped through
+            if wl in {'that', 'this', 'these', 'those', 'they', 'them', 'their', 'there'}: continue
             if re.match(r'^[a-zA-Z]+$', wl):
-                # simple heuristic: verbs often end in -ing/-ed or short words can be verbs/nouns
-                if re.search(r'(ing|ed|s)$', wl) or len(wl) > 3:
-                    # reject pronouns/determiners explicitly
-                    if wl in {'that', 'this', 'these', 'those', 'it', 'they', 'them', 'he', 'she', 'we', 'you'}:
-                        continue
-                    allowed.append(wl)
+                allowed.append(wl)
         return allowed
 
     collected_media_basenames = set()
@@ -209,6 +163,11 @@ def process_uploaded_data(files_data):
                     continue
                     
                 sender = fix_text(message['sender_name'])
+                
+                # Exclude Meta AI
+                if sender == "Meta AI":
+                    continue
+                    
                 user_messages_sent[sender] += 1
 
                 # Store for chronological processing
@@ -222,6 +181,7 @@ def process_uploaded_data(files_data):
                     content = fix_text(message['content'])
                     # Expand contractions (so "that's" -> "that is" and gets removed by stopwords)
                     content = expand_contractions(content)
+                    user_total_chars[sender] += len(content)
 
                     # Split into words first
                     raw_words = content.split()
@@ -232,11 +192,9 @@ def process_uploaded_data(files_data):
                     # Process for Word Counts
                     processed_words = []
                     for w in non_url_words:
-                        # Check for profanity
-                        for pattern in profanity_patterns:
-                            if pattern.match(w):
-                                user_profanity_counts[sender] += 1
-                                break  # Count each word only once
+                        # Check for profanity in a single regex pass
+                        if _PROFANITY_RE.match(w):
+                            user_profanity_counts[sender] += 1
 
                         # Basic tokenization: lowercase and remove non-alphanumeric characters
                         cleaned = re.sub(r'[^\w\s]', '', w.lower())
@@ -245,12 +203,8 @@ def process_uploaded_data(files_data):
                         if cleaned and cleaned not in STOPWORDS and len(cleaned) > 1:
                             processed_words.append(cleaned)
 
-                    # Filter words by POS (nouns, verbs, interjections) before counting
-                    pos_words = _filter_words_by_pos(processed_words)
-                    # Ensure only single-word alphabetic tokens are considered
-                    pos_words = [pw for pw in pos_words if re.match(r'^[A-Za-z]+$', pw)]
-                    # Filter out pronouns/determiners explicitly
-                    pos_words = [pw for pw in pos_words if pw not in {'that', 'this', 'these', 'those', 'it', 'they', 'them', 'he', 'she', 'we', 'you'}]
+                    # Filter words using fast heuristic
+                    pos_words = _fast_filter_words(processed_words)
                     user_word_counts[sender].update(pos_words)
                     total_word_counts.update(pos_words)
 
@@ -266,11 +220,6 @@ def process_uploaded_data(files_data):
                         if len(clean_word) > user_longest_words[sender]["length"]:
                             user_longest_words[sender] = {"word": clean_word, "length": len(clean_word)}
 
-                    # 4. & 5. Emoji Stats
-                    emojis = emoji_pattern.findall(content)
-                    if emojis:
-                        emoji_counts.update(emojis)
-                        user_emoji_counts[sender] += len(emojis)
 
                     # Check for Reels
                     if "instagram.com/reel" in content:
@@ -289,26 +238,25 @@ def process_uploaded_data(files_data):
                         for reaction in message['reactions']:
                             if 'actor' in reaction:
                                 actor = fix_text(reaction['actor'])
+                                if actor == "Meta AI":
+                                    continue
                                 user_likes_given[actor] += 1
                                 likes_matrix[actor][sender] += 1
                         
-                        # Fix content encoding and filter out non-ASCII messages
-                        raw_content = message.get('content', '[Media/No Content]')
-                        fixed_content = fix_text(raw_content) if raw_content != '[Media/No Content]' else raw_content
+                        # Fix content encoding and filter out media-only messages
+                        raw_content = message.get('content', '')
+                        if not raw_content or raw_content == '[Media/No Content]':
+                            continue
+                            
+                        fixed_content = fix_text(raw_content)
                         
-                        # Only include messages with proper ASCII content
-                        try:
-                            fixed_content.encode('ascii', 'strict')
-                            msg_info = {
-                                "content": fixed_content,
-                                "sender": sender,
-                                "likes": like_count,
-                                "timestamp": message.get('timestamp_ms', 0)
-                            }
-                            messages_with_likes.append(msg_info)
-                        except UnicodeEncodeError:
-                            # Skip messages that can't be converted to ASCII
-                            pass
+                        msg_info = {
+                            "content": fixed_content,
+                            "sender": sender,
+                            "likes": like_count,
+                            "timestamp": message.get('timestamp_ms', 0)
+                        }
+                        messages_with_likes.append(msg_info)
 
                 # 6. Image/Media Stats (robust detection for screenshots and attachments)
                 media_count = 0
@@ -472,6 +420,10 @@ def process_uploaded_data(files_data):
         elif 6 <= hour < 12:
             morning_person_counts[sender] += 1
         
+        # Peak Activity Month
+        month_key = dt.strftime('%B %Y')
+        month_counts[month_key] += 1
+        
         # Most Replied To Heuristic
         if i < len(all_messages) - 1:
             next_msg = all_messages[i+1]
@@ -482,6 +434,32 @@ def process_uploaded_data(files_data):
                 time_diff = (next_ts - ts_ms) / 1000.0 # seconds
                 if time_diff < 300: # 5 minutes
                     replied_to_counts[sender] += 1
+
+    # Average Response Time Analysis
+    user_response_times = defaultdict(list)
+    for i in range(1, len(all_messages)):
+        prev_msg = all_messages[i-1]
+        curr_msg = all_messages[i]
+        prev_sender = prev_msg.get('sender_name')
+        curr_sender = curr_msg.get('sender_name')
+        
+        if prev_sender != curr_sender:
+            time_diff = (curr_msg.get('timestamp_ms', 0) - prev_msg.get('timestamp_ms', 0)) / 1000.0
+            # Only count if it's within a reasonable "conversation" window, e.g., 12 hours
+            if time_diff < 43200: 
+                user_response_times[curr_sender].append(time_diff)
+
+    avg_response_times = []
+    for user, times in user_response_times.items():
+        if len(times) >= 5:
+            avg_response_times.append([user, sum(times) / len(times)])
+    
+    # Average Message Length
+    avg_lengths = []
+    for user in user_messages_sent:
+        if user_messages_sent[user] > 0:
+            avg_lengths.append([user, user_total_chars[user] / user_messages_sent[user]])
+    
 
     # --- Generate Rankings ---
 
@@ -498,12 +476,6 @@ def process_uploaded_data(files_data):
 
     # 3. Top 10 liked messages
     top_liked_messages = sorted(messages_with_likes, key=lambda x: x['likes'], reverse=True)[:10]
-
-    # 4. Top 10 emojis
-    top_emojis = emoji_counts.most_common(10)
-
-    # 5. Top 10 emoji users
-    top_emoji_users = user_emoji_counts.most_common(10)
 
     # 6. Top 10 image senders
     top_image_senders = user_image_counts.most_common(10)
@@ -553,8 +525,6 @@ def process_uploaded_data(files_data):
         "top_words_per_user": top_words_per_user,
         "top_words_overall": top_words_overall,
         "top_liked_messages": top_liked_messages,
-        "top_emojis": top_emojis,
-        "top_emoji_users": top_emoji_users,
         "top_image_senders": top_image_senders,
         # Expose detected media basenames and available share methods so the UI can show buttons
         "media_files": sorted(list(collected_media_basenames)),
@@ -570,7 +540,11 @@ def process_uploaded_data(files_data):
         "longest_word_sent": top_longest_words,
         "most_aura": top_aura,
         "most_messages_liked": top_messages_liked,
-        "most_profanity": get_top_10(user_profanity_counts)
+        "most_profanity": get_top_10(user_profanity_counts),
+        "avg_response_times": sorted(avg_response_times, key=lambda x: x[1])[:10], # Fastest first
+        "slowest_responders": sorted(avg_response_times, key=lambda x: x[1], reverse=True)[:10],
+        "avg_message_lengths": sorted(avg_lengths, key=lambda x: x[1], reverse=True)[:10],
+        "peak_month": month_counts.most_common(1)[0] if month_counts else ("None", 0),
     }
 
     # --- Generate Network Data ---

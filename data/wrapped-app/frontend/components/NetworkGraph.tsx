@@ -237,7 +237,7 @@ export default function NetworkGraph({ data }: NetworkGraphProps) {
                                 nodeCanvasObject={(node: any, ctx: any, globalScale: any) => {
                                     const label = node.id;
                                     const fontSize = 12 / globalScale;
-                                    ctx.font = `${fontSize}px Inter`;
+                                    ctx.font = `${fontSize}px Inter, sans-serif`;
                                     const textWidth = ctx.measureText(label).width;
                                     const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2);
 

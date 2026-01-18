@@ -7,12 +7,13 @@ import { cn } from "@/app/lib/utils";
 
 interface WrappedExperienceProps {
     data: any;
+    selectedSlideIds: string[];
     onReset: () => void;
 }
 
 import NetworkGraph from "./NetworkGraph";
 
-export default function WrappedExperience({ data, onReset }: WrappedExperienceProps) {
+export default function WrappedExperience({ data, selectedSlideIds, onReset }: WrappedExperienceProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [showShareDialog, setShowShareDialog] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -34,7 +35,7 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
             for (let i = 0; i < slides.length - 1; i++) {
                 setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
                 setCurrentSlide(i);
-                await new Promise(resolve => setTimeout(resolve, 2500));
+                await new Promise(resolve => setTimeout(resolve, 800));
 
                 const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
                 if (!slideContainer) continue;
@@ -102,7 +103,7 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
             for (let i = 0; i < slides.length - 1; i++) {
                 setProgressMessage(`Capturing slide ${i + 1} of ${slides.length - 1}: ${slides[i].id}`);
                 setCurrentSlide(i);
-                await new Promise(resolve => setTimeout(resolve, 2500));
+                await new Promise(resolve => setTimeout(resolve, 800));
 
                 const slideContainer = document.querySelector('.fixed.inset-0') as HTMLElement;
                 if (!slideContainer) continue;
@@ -153,14 +154,16 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
         }
     };
 
-    const slides = [
+    const allSlides = [
         { id: "intro", component: <IntroSlide />, bg: "bg-wrapped-pink" },
         { id: "top-words", component: <TopWordsSlide data={data.stats.top_words_overall} />, bg: "bg-wrapped-green" },
-        { id: "emojis", component: <EmojiSlide data={data.stats.top_emojis} />, bg: "bg-wrapped-yellow" },
+        { id: "response-time", component: <ResponseTimeSlide fastest={data.rankings.avg_response_times} slowest={data.rankings.slowest_responders} />, bg: "bg-wrapped-blue" },
         { id: "aura", component: <AuraSlide data={data.rankings.most_aura} />, bg: "bg-wrapped-blue" },
         { id: "reels", component: <ReelsSlide data={data.rankings.most_reels_sent} />, bg: "bg-wrapped-purple" },
+        { id: "paragrapher", component: <ParagrapherSlide data={data.rankings.avg_message_lengths} />, bg: "bg-wrapped-orange" },
         { id: "top-liked", component: <TopLikedSlide data={data.stats.top_liked_messages} />, bg: "bg-wrapped-pink" },
         { id: "network", component: <NetworkGraph data={data.network_data} />, bg: "bg-wrapped-green" },
+        { id: "peak-month", component: <PeakMonthSlide data={data.rankings.peak_month} />, bg: "bg-wrapped-yellow" },
         { id: "time", component: <TimeSlide night={data.rankings.night_owls} morning={data.rankings.morning_person} />, bg: "bg-gradient-to-r from-slate-900 via-slate-700 to-wrapped-yellow" },
         { id: "longest-word", component: <LongestWordSlide data={data.rankings.longest_word_sent} />, bg: "bg-wrapped-blue" },
         { id: "likes-given", component: <LikesGivenSlide data={data.rankings.most_messages_liked} />, bg: "bg-wrapped-orange" },
@@ -168,6 +171,9 @@ export default function WrappedExperience({ data, onReset }: WrappedExperiencePr
         { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-green" },
         { id: "archetypes", component: <ArchetypesSlide rankings={data.rankings} />, bg: "bg-wrapped-purple" },
     ];
+
+    // Filter slides based on selection, but always keep intro first
+    const slides = allSlides.filter(s => s.id === "intro" || selectedSlideIds.includes(s.id));
 
     // Add summary slide after slides array is defined
     slides.push({
@@ -400,6 +406,74 @@ function TimeSlide({ night, morning }: { night: any[], morning: any[] }) {
     );
 }
 
+function ResponseTimeSlide({ fastest, slowest }: { fastest: any[], slowest: any[] }) {
+    const topFast = fastest[0];
+    const topSlow = slowest[0];
+
+    const formatTime = (seconds: number) => {
+        if (seconds < 60) return `${Math.round(seconds)}s`;
+        if (seconds < 3600) return `${Math.round(seconds / 60)}m`;
+        return `${Math.round(seconds / 3600)}h`;
+    };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
+            <div className="wrapped-card p-12 space-y-8 -rotate-1 bg-white text-black">
+                <div className="flex items-center space-x-4">
+                    <Zap className="w-12 h-12 text-wrapped-yellow" />
+                    <h3 className="text-3xl font-black italic">THE FLASH</h3>
+                </div>
+                <div className="space-y-2">
+                    <p className="text-wrapped-poster text-5xl md:text-8xl">{topFast[0]}</p>
+                    <p className="text-lg md:text-xl font-bold opacity-40 uppercase tracking-tighter">{formatTime(topFast[1])} AVG RESPONSE</p>
+                </div>
+            </div>
+
+            <div className="wrapped-card p-12 space-y-8 rotate-1 bg-black text-white border-white">
+                <div className="flex items-center space-x-4">
+                    <Ghost className="w-12 h-12 text-wrapped-pink" />
+                    <h3 className="text-3xl font-black italic">THE GHOSTER</h3>
+                </div>
+                <div className="space-y-2">
+                    <p className="text-wrapped-poster text-5xl md:text-8xl">{topSlow[0]}</p>
+                    <p className="text-lg md:text-xl font-bold opacity-40 uppercase tracking-tighter">{formatTime(topSlow[1])} AVG RESPONSE</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ParagrapherSlide({ data }: { data: any[] }) {
+    const top = data[0];
+    return (
+        <div className="text-center space-y-12">
+            <div className="wrapped-card p-10 bg-white rotate-3 inline-block">
+                <FileText className="w-24 h-24 text-wrapped-orange" />
+            </div>
+            <div className="space-y-4">
+                <h2 className="text-wrapped-poster text-4xl md:text-7xl text-black/40 uppercase">THE PARAGRAPHER</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[10rem] text-black">{top[0]}</h3>
+                <div className="sticker bg-black text-white text-lg md:text-2xl">{Math.round(top[1])} CHARS PER MESSAGE</div>
+            </div>
+        </div>
+    );
+}
+
+function PeakMonthSlide({ data }: { data: [string, number] }) {
+    return (
+        <div className="text-center space-y-12">
+            <div className="wrapped-card p-12 bg-white -rotate-2 inline-block">
+                <h2 className="text-wrapped-poster text-4xl md:text-6xl text-black/20 mb-4 uppercase">PEAK YAP SESSION</h2>
+                <h3 className="text-wrapped-poster text-6xl md:text-[12rem] text-black leading-none">{data[0].split(' ')[0]}<br />{data[0].split(' ')[1]}</h3>
+                <div className="sticker bg-wrapped-green text-black text-2xl mt-8">
+                    {data[1].toLocaleString()} MESSAGES SENT
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
 function ProfanitySlide({ data }: { data: any[] }) {
     const top = data[0];
     return (
@@ -480,22 +554,6 @@ function RepliedToSlide({ data }: { data: any[] }) {
     );
 }
 
-function EmojiSlide({ data }: { data: any[] }) {
-    return (
-        <div className="text-center space-y-12">
-            <h2 className="text-wrapped-poster text-7xl md:text-9xl text-black">VIBE CHECK</h2>
-            <div className="flex flex-wrap justify-center gap-8">
-                {data.slice(0, 5).map(([emoji, count], i) => (
-                    <div key={i} className="wrapped-card p-4 md:p-6 flex flex-col items-center space-y-2 md:space-y-4 animate-bounce" style={{ animationDelay: `${i * 100}ms` }}>
-                        <span className="text-5xl md:text-7xl">{emoji}</span>
-                        <span className="text-xl md:text-2xl font-black">{count}</span>
-                    </div>
-                ))}
-            </div>
-            <div className="sticker bg-black text-white text-2xl rotate-3 inline-block">THE GROUP'S FAVORITES</div>
-        </div>
-    );
-}
 
 function TopLikedSlide({ data }: { data: any[] }) {
     const top = data[0];
@@ -575,7 +633,7 @@ function SummarySlide({
         <div className="text-center space-y-12 w-full max-w-5xl px-4">
             <h2 className="text-wrapped-poster text-5xl md:text-[10rem] text-white">THAT'S<br />YOUR<br />YEAR.</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="wrapped-card p-8 text-left -rotate-1">
                     <p className="text-xs font-black opacity-40 uppercase mb-2">Top Word</p>
                     <p className="text-4xl font-black italic uppercase">{data.stats.top_words_overall[0][0]}</p>
@@ -583,6 +641,10 @@ function SummarySlide({
                 <div className="wrapped-card p-8 text-left rotate-1 bg-wrapped-pink text-white border-white">
                     <p className="text-xs font-black opacity-60 uppercase mb-2">Aura King</p>
                     <p className="text-4xl font-black italic uppercase">{data.rankings.most_aura[0][0]}</p>
+                </div>
+                <div className="wrapped-card p-8 text-left -rotate-2 bg-wrapped-green text-black">
+                    <p className="text-xs font-black opacity-40 uppercase mb-2">Peak Month</p>
+                    <p className="text-4xl font-black italic uppercase">{data.rankings.peak_month[0].split(' ')[0]}</p>
                 </div>
             </div>
 

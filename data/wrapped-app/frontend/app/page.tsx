@@ -11,6 +11,35 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState(false);
   const [wrappedData, setWrappedData] = useState<any>(null);
   const [showUnwrap, setShowUnwrap] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [selectedSlides, setSelectedSlides] = useState<string[]>([
+    "top-words", "response-time", "aura", "reels", "paragrapher",
+    "top-liked", "network", "peak-month", "time", "longest-word",
+    "likes-given", "profanity", "replied-to", "archetypes"
+  ]);
+
+  const availableSlides = [
+    { id: "top-words", label: "Top Words" },
+    { id: "response-time", label: "Response Times" },
+    { id: "aura", label: "Aura Check" },
+    { id: "reels", label: "Reel Addiction" },
+    { id: "paragrapher", label: "The Paragrapher" },
+    { id: "top-liked", label: "Hall of Fame" },
+    { id: "network", label: "Squad Network" },
+    { id: "peak-month", label: "Peak Activity" },
+    { id: "time", label: "Sleep Schedule" },
+    { id: "longest-word", label: "Vocabulary" },
+    { id: "likes-given", label: "The Encourager" },
+    { id: "profanity", label: "Potty Mouth" },
+    { id: "replied-to", label: "Most Replied" },
+    { id: "archetypes", label: "Squad Roster" },
+  ];
+
+  const toggleSlide = (id: string) => {
+    setSelectedSlides(prev =>
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    );
+  };
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   const uploadRef = useRef<HTMLDivElement>(null);
@@ -110,11 +139,15 @@ export default function Home() {
   };
 
   if (wrappedData && !showUnwrap) {
-    return <WrappedExperience data={wrappedData} onReset={() => {
-      setWrappedData(null);
-      setFiles([]);
-      setShowUnwrap(false);
-    }} />;
+    return <WrappedExperience
+      data={wrappedData}
+      selectedSlideIds={selectedSlides}
+      onReset={() => {
+        setWrappedData(null);
+        setFiles([]);
+        setShowUnwrap(false);
+      }}
+    />;
   }
 
   return (
@@ -190,12 +223,50 @@ export default function Home() {
                       ))}
                     </div>
 
+                    <div className="wrapped-card bg-white p-6 space-y-4">
+                      <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                        <h4 className="text-black text-xl font-black uppercase italic">Select Your Slides</h4>
+                        <div className="flex space-x-3">
+                          <button
+                            onClick={() => setSelectedSlides(availableSlides.map(s => s.id))}
+                            className="text-[10px] font-black uppercase tracking-widest text-wrapped-blue hover:underline"
+                          >
+                            All
+                          </button>
+                          <button
+                            onClick={() => setSelectedSlides([])}
+                            className="text-[10px] font-black uppercase tracking-widest text-wrapped-pink hover:underline"
+                          >
+                            None
+                          </button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {availableSlides.map((slide) => (
+                          <label key={slide.id} className="flex items-center space-x-2 cursor-pointer group">
+                            <div
+                              onClick={() => toggleSlide(slide.id)}
+                              className={cn(
+                                "w-6 h-6 border-2 border-black flex items-center justify-center transition-all",
+                                selectedSlides.includes(slide.id) ? "bg-wrapped-green" : "bg-white"
+                              )}
+                            >
+                              {selectedSlides.includes(slide.id) && <div className="w-3 h-3 bg-black" />}
+                            </div>
+                            <span className="text-black text-xs font-black uppercase tracking-tight group-hover:text-wrapped-pink transition-colors">
+                              {slide.label}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
                     <button
                       onClick={handleUpload}
-                      disabled={isUploading}
+                      disabled={isUploading || selectedSlides.length === 0}
                       className={cn(
                         "w-full py-6 sm:py-8 md:py-12 bg-wrapped-green text-black text-3xl sm:text-4xl md:text-6xl font-black italic border-4 border-black shadow-[8px_8px_0px_black] md:shadow-[16px_16px_0px_black] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[20px_20px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[8px_8px_0px_black] transition-all flex items-center justify-center space-x-4 md:space-x-8",
-                        isUploading && "opacity-50 cursor-not-allowed"
+                        (isUploading || selectedSlides.length === 0) && "opacity-50 cursor-not-allowed"
                       )}
                     >
                       {isUploading ? (
@@ -234,8 +305,51 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Instructions Section */}
+      <div className="w-full max-w-3xl mt-12 mb-24">
+        <button
+          onClick={() => setShowInstructions(!showInstructions)}
+          className="w-full py-4 bg-black text-white font-black uppercase tracking-widest border-2 border-white/20 hover:bg-white hover:text-black transition-all flex items-center justify-center space-x-3"
+        >
+          <span>{showInstructions ? "HIDE INSTRUCTIONS" : "HOW TO GET YOUR DATA?"}</span>
+          <Sparkles className={cn("w-5 h-5", showInstructions && "rotate-180 transition-transform")} />
+        </button>
+
+        {showInstructions && (
+          <div className="wrapped-card bg-white text-black p-8 mt-4 space-y-6 animate-snap">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h4 className="text-2xl font-black italic uppercase border-b-4 border-black pb-2">Step 1: Request</h4>
+                <ol className="list-decimal list-inside space-y-2 font-bold text-sm">
+                  <li>Open Instagram Settings</li>
+                  <li>Go to <span className="text-wrapped-pink">Accounts Center</span></li>
+                  <li>Select <span className="text-wrapped-pink">Your information and permissions</span></li>
+                  <li>Click <span className="text-wrapped-pink">Download your information</span></li>
+                  <li>Choose <span className="text-wrapped-pink">Some of your information</span></li>
+                </ol>
+              </div>
+              <div className="space-y-4">
+                <h4 className="text-2xl font-black italic uppercase border-b-4 border-black pb-2">Step 2: Configure</h4>
+                <ol className="list-decimal list-inside space-y-2 font-bold text-sm" start={6}>
+                  <li>Select only <span className="text-wrapped-blue">Messages</span></li>
+                  <li>Set Format to <span className="bg-wrapped-yellow px-1">JSON</span> (Important!)</li>
+                  <li>Set Date Range to <span className="text-wrapped-blue">All time</span></li>
+                  <li>Submit and wait for the email</li>
+                  <li>Download & Unzip the file</li>
+                </ol>
+              </div>
+            </div>
+            <div className="bg-wrapped-pink/10 p-4 border-2 border-wrapped-pink border-dashed">
+              <p className="text-xs font-black uppercase tracking-tight">
+                PRO TIP: Once unzipped, look for the <span className="underline">messages/inbox</span> folder. Upload all the <span className="underline">message_1.json</span> files from your group chat folder!
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Simplified Branding */}
-      <div className="absolute bottom-12 left-12 opacity-20">
+      <div className="absolute bottom-12 left-12 opacity-20 hidden md:block">
         <div className="text-wrapped-poster text-6xl">WRAPPED</div>
       </div>
     </main>
