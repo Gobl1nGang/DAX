@@ -29,6 +29,7 @@ def process_uploaded_data(files_data):
     user_word_counts = defaultdict(Counter)
     total_word_counts = Counter()
     messages_with_likes = []
+    quiz_pool = []
     user_image_counts = Counter()
 
     # Special Rankings Data
@@ -256,6 +257,11 @@ def process_uploaded_data(files_data):
                             "likes": like_count,
                             "timestamp": message.get('timestamp_ms', 0)
                         }
+                        
+                        # 6. Quiz Pool (Sentences)
+                        if 30 < len(fixed_content) < 150 and not is_url(fixed_content):
+                            quiz_pool.append({"content": fixed_content, "sender": sender})
+
                         messages_with_likes.append(msg_info)
 
                 # 6. Image/Media Stats (robust detection for screenshots and attachments)
@@ -521,11 +527,25 @@ def process_uploaded_data(files_data):
     top_messages_liked = get_top_10(user_likes_given)
 
     # Construct final stats object (Original)
+    # Shuffle and pick a diverse set for the quiz
+    import random
+    random.shuffle(quiz_pool)
+    # Try to get unique messages from different senders
+    seen_senders = set()
+    final_quiz = []
+    for msg in quiz_pool:
+        if msg['sender'] not in seen_senders or len(seen_senders) > 10:
+            final_quiz.append(msg)
+            seen_senders.add(msg['sender'])
+        if len(final_quiz) >= 15:
+            break
+
     stats = {
         "top_words_per_user": top_words_per_user,
         "top_words_overall": top_words_overall,
         "top_liked_messages": top_liked_messages,
         "top_image_senders": top_image_senders,
+        "quiz_pool": final_quiz,
         # Expose detected media basenames and available share methods so the UI can show buttons
         "media_files": sorted(list(collected_media_basenames)),
         "share_story_options": ['html', 'pptx', 'pdf']
@@ -591,6 +611,14 @@ def process_uploaded_data(files_data):
     network_data = {
         "nodes": nodes,
         "links": links
+    }
+
+    # --- Chart Data ---
+    chart_data = {
+        "messages_sent": [{"name": u, "value": v} for u, v in user_messages_sent.most_common(15)],
+        "likes_given": [{"name": u, "value": v} for u, v in user_likes_given.most_common(15)],
+        "likes_received": [{"name": u, "value": v} for u, v in user_likes_received.most_common(15)],
+        "reels_sent": [{"name": u, "value": v} for u, v in user_reels_sent.most_common(15)],
     }
 
     # --- Share Story Generators ---
@@ -720,6 +748,7 @@ def process_uploaded_data(files_data):
         "stats": stats,
         "rankings": rankings,
         "network_data": network_data,
+        "chart_data": chart_data,
         "media_files": sorted(list(collected_media_basenames)),
         "share_story_options": share_story_options,
         # helper function available for local/testing usage; not serializable over JSON

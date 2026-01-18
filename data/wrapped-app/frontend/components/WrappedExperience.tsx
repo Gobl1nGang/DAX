@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { animate, Timeline, stagger } from "animejs";
-import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart, Smile, Award, Users, Star, FileText, X } from "lucide-react";
+import { ChevronRight, ChevronLeft, RefreshCcw, Share2, Trophy, MessageSquare, Zap, Moon, Sun, Ghost, Sparkles, Music, Heart, Smile, Award, Users, Star, FileText, X, BarChart3 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend, LabelList } from 'recharts';
 import { cn } from "@/app/lib/utils";
 
 interface WrappedExperienceProps {
@@ -157,9 +158,12 @@ export default function WrappedExperience({ data, selectedSlideIds, onReset }: W
     const allSlides = [
         { id: "intro", component: <IntroSlide />, bg: "bg-wrapped-pink" },
         { id: "top-words", component: <TopWordsSlide data={data.stats.top_words_overall} />, bg: "bg-wrapped-green" },
+        { id: "chart-messages", component: <MetricsChartSlide title="VOLUME CHECK" data={data.chart_data.messages_sent} color="#FFD300" subtitle="MOST MESSAGES SENT" />, bg: "bg-wrapped-blue" },
+        { id: "chart-likes", component: <LikesComparisonSlide data={data.chart_data} />, bg: "bg-wrapped-yellow" },
         { id: "response-time", component: <ResponseTimeSlide fastest={data.rankings.avg_response_times} slowest={data.rankings.slowest_responders} />, bg: "bg-wrapped-blue" },
         { id: "aura", component: <AuraSlide data={data.rankings.most_aura} />, bg: "bg-wrapped-blue" },
         { id: "reels", component: <ReelsSlide data={data.rankings.most_reels_sent} />, bg: "bg-wrapped-purple" },
+        { id: "chart-reels", component: <MetricsChartSlide title="REEL TALK" data={data.chart_data.reels_sent} color="#FF4BAB" subtitle="REEL ADDICTION LEVELS" />, bg: "bg-wrapped-orange" },
         { id: "paragrapher", component: <ParagrapherSlide data={data.rankings.avg_message_lengths} />, bg: "bg-wrapped-orange" },
         { id: "top-liked", component: <TopLikedSlide data={data.stats.top_liked_messages} />, bg: "bg-wrapped-pink" },
         { id: "network", component: <NetworkGraph data={data.network_data} />, bg: "bg-wrapped-green" },
@@ -170,6 +174,7 @@ export default function WrappedExperience({ data, selectedSlideIds, onReset }: W
         { id: "profanity", component: <ProfanitySlide data={data.rankings.most_profanity} />, bg: "bg-wrapped-pink" },
         { id: "replied-to", component: <RepliedToSlide data={data.rankings.most_replied_to} />, bg: "bg-wrapped-green" },
         { id: "archetypes", component: <ArchetypesSlide rankings={data.rankings} />, bg: "bg-wrapped-purple" },
+        { id: "quiz", component: <QuizSlide pool={data.stats.quiz_pool} participants={data.network_data.nodes.map((n: any) => n.id)} />, bg: "bg-wrapped-yellow" },
     ];
 
     // Filter slides based on selection, but always keep intro first
@@ -554,6 +559,94 @@ function RepliedToSlide({ data }: { data: any[] }) {
     );
 }
 
+function MetricsChartSlide({ title, data, color, subtitle }: { title: string, data: any[], color: string, subtitle: string }) {
+    return (
+        <div className="w-full max-w-5xl space-y-8 text-center">
+            <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black">{title}</h2>
+            <div className="wrapped-card p-6 md:p-10 bg-white h-[400px] md:h-[500px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={data} layout="vertical" margin={{ left: 20, right: 40, top: 20, bottom: 20 }}>
+                        <XAxis type="number" hide />
+                        <YAxis
+                            dataKey="name"
+                            type="category"
+                            width={120}
+                            tick={{ fill: '#000', fontWeight: 'bold', fontSize: 12 }}
+                            axisLine={false}
+                            tickLine={false}
+                        />
+                        <Tooltip
+                            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                            contentStyle={{
+                                backgroundColor: '#000',
+                                border: '4px solid #000',
+                                borderRadius: '0px',
+                                color: '#fff',
+                                fontWeight: 'bold'
+                            }}
+                        />
+                        <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={color} stroke="#000" strokeWidth={2} />
+                            ))}
+                            <LabelList dataKey="value" position="right" style={{ fill: '#000', fontWeight: '900', fontSize: '14px' }} />
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+            <div className="sticker bg-black text-white text-xl rotate-[-2deg] inline-block uppercase">{subtitle}</div>
+        </div>
+    );
+}
+
+function LikesComparisonSlide({ data }: { data: any }) {
+    // Merge likes given and received for the same users
+    const users = Array.from(new Set([
+        ...data.likes_given.map((d: any) => d.name),
+        ...data.likes_received.map((d: any) => d.name)
+    ])).slice(0, 10);
+
+    const chartData = users.map(user => ({
+        name: user,
+        given: data.likes_given.find((d: any) => d.name === user)?.value || 0,
+        received: data.likes_received.find((d: any) => d.name === user)?.value || 0
+    }));
+
+    return (
+        <div className="w-full max-w-5xl space-y-8 text-center">
+            <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black">THE LOVE SCALE</h2>
+            <div className="wrapped-card p-6 md:p-10 bg-white h-[400px] md:h-[500px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                        <XAxis
+                            dataKey="name"
+                            angle={-45}
+                            textAnchor="end"
+                            interval={0}
+                            tick={{ fill: '#000', fontWeight: 'bold', fontSize: 10 }}
+                        />
+                        <YAxis tick={{ fill: '#000', fontWeight: 'bold' }} />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: '#000',
+                                border: '4px solid #000',
+                                color: '#fff'
+                            }}
+                        />
+                        <Legend verticalAlign="top" height={36} />
+                        <Bar name="Likes Given" dataKey="given" fill="#FF4BAB" stroke="#000" strokeWidth={2}>
+                            <LabelList dataKey="given" position="top" style={{ fill: '#000', fontWeight: '900', fontSize: '10px' }} />
+                        </Bar>
+                        <Bar name="Likes Received" dataKey="received" fill="#00E5FF" stroke="#000" strokeWidth={2}>
+                            <LabelList dataKey="received" position="top" style={{ fill: '#000', fontWeight: '900', fontSize: '10px' }} />
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+            <div className="sticker bg-wrapped-yellow text-black text-xl rotate-[2deg] inline-block uppercase italic">WHO'S THE MOST GENEROUS?</div>
+        </div>
+    );
+}
 
 function TopLikedSlide({ data }: { data: any[] }) {
     const top = data[0];
@@ -698,6 +791,95 @@ function SummarySlide({
                             </button>
                         </div>
                     </div>
+                </div>
+            )}
+        </div>
+    );
+}
+function QuizSlide({ pool, participants }: { pool: any[], participants: string[] }) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+    const [score, setScore] = useState(0);
+    const [options, setOptions] = useState<string[]>([]);
+
+    const currentQuestion = pool[currentIndex];
+
+    useEffect(() => {
+        if (currentQuestion) {
+            const others = participants.filter(p => p !== currentQuestion.sender);
+            const shuffledOthers = others.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const newOptions = [currentQuestion.sender, ...shuffledOthers].sort(() => 0.5 - Math.random());
+            setOptions(newOptions);
+            setSelectedAnswer(null);
+            setIsCorrect(null);
+        }
+    }, [currentIndex, currentQuestion, participants]);
+
+    const handleAnswer = (answer: string) => {
+        if (selectedAnswer) return;
+        setSelectedAnswer(answer);
+        const correct = answer === currentQuestion.sender;
+        setIsCorrect(correct);
+        if (correct) setScore(s => s + 1);
+    };
+
+    const nextQuestion = () => {
+        if (currentIndex < pool.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+        }
+    };
+
+    if (!currentQuestion) return null;
+
+    return (
+        <div className="w-full max-w-4xl space-y-8 md:space-y-12 text-center">
+            <div className="space-y-4">
+                <h2 className="text-wrapped-poster text-5xl md:text-7xl text-black">WHO SAID IT?</h2>
+                <div className="flex justify-center space-x-4">
+                    <div className="sticker bg-black text-white text-sm">QUESTION {currentIndex + 1}/{pool.length}</div>
+                    <div className="sticker bg-wrapped-green text-black text-sm">SCORE: {score}</div>
+                </div>
+            </div>
+
+            <div className="wrapped-card p-8 md:p-12 bg-white space-y-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-black/5" />
+                <p className="text-2xl md:text-4xl font-black italic leading-tight">
+                    "{currentQuestion.content}"
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {options.map((option, i) => (
+                    <button
+                        key={i}
+                        onClick={() => handleAnswer(option)}
+                        className={cn(
+                            "wrapped-card p-4 md:p-6 text-xl font-black uppercase transition-all transform active:scale-95",
+                            selectedAnswer === option
+                                ? (option === currentQuestion.sender ? "bg-wrapped-green text-black" : "bg-red-500 text-white")
+                                : (selectedAnswer && option === currentQuestion.sender ? "bg-wrapped-green/50 text-black" : "bg-white text-black hover:bg-black hover:text-white")
+                        )}
+                    >
+                        {option}
+                    </button>
+                ))}
+            </div>
+
+            {selectedAnswer && (
+                <div className="animate-snap">
+                    {currentIndex < pool.length - 1 ? (
+                        <button
+                            onClick={nextQuestion}
+                            className="btn-primary bg-black text-white px-12 py-4 text-2xl"
+                        >
+                            NEXT QUESTION
+                        </button>
+                    ) : (
+                        <div className="sticker bg-wrapped-pink text-white text-2xl rotate-3">
+                            FINAL SCORE: {score}/{pool.length}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

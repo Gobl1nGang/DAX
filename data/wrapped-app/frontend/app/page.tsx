@@ -13,16 +13,19 @@ export default function Home() {
   const [showUnwrap, setShowUnwrap] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [selectedSlides, setSelectedSlides] = useState<string[]>([
-    "top-words", "response-time", "aura", "reels", "paragrapher",
+    "top-words", "chart-messages", "chart-likes", "response-time", "aura", "reels", "chart-reels", "paragrapher",
     "top-liked", "network", "peak-month", "time", "longest-word",
-    "likes-given", "profanity", "replied-to", "archetypes"
+    "likes-given", "profanity", "replied-to", "archetypes", "quiz"
   ]);
 
   const availableSlides = [
     { id: "top-words", label: "Top Words" },
+    { id: "chart-messages", label: "Volume Chart" },
+    { id: "chart-likes", label: "Love Scale" },
     { id: "response-time", label: "Response Times" },
     { id: "aura", label: "Aura Check" },
     { id: "reels", label: "Reel Addiction" },
+    { id: "chart-reels", label: "Reel Chart" },
     { id: "paragrapher", label: "The Paragrapher" },
     { id: "top-liked", label: "Hall of Fame" },
     { id: "network", label: "Squad Network" },
@@ -33,6 +36,7 @@ export default function Home() {
     { id: "profanity", label: "Potty Mouth" },
     { id: "replied-to", label: "Most Replied" },
     { id: "archetypes", label: "Squad Roster" },
+    { id: "quiz", label: "The Quiz" },
   ];
 
   const toggleSlide = (id: string) => {
